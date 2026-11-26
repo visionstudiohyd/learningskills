@@ -32,6 +32,12 @@ export function buildConnectionConfig() {
     maxIdle: Number(process.env.DB_CONNECTION_LIMIT || 10),
     idleTimeout: 60_000,
     queueLimit: 0,
+    // Fail fast when the host is unreachable (un-whitelisted remote MySQL, a
+    // firewall, or the DB being down). Without this, mysql2 inherits the OS
+    // TCP timeout (~75s), which outlives both Next.js' 60s per-page prerender
+    // budget and the serverless function limit - so a failure the query layer
+    // is designed to catch and degrade from never arrives in time to be caught.
+    connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT_MS || 10_000),
     enableKeepAlive: true,
     keepAliveInitialDelay: 10_000,
     charset: 'utf8mb4',
