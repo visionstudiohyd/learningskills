@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-const STORAGE_KEY = 'pathwise.shortlist.v1';
+const STORAGE_KEY = 'learningskills.shortlist.v1';
 const ShortlistContext = createContext(null);
 
 /**

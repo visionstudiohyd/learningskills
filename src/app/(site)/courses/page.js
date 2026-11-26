@@ -80,7 +80,7 @@ export default async function CoursesPage({ searchParams }) {
       <FeaturesSection
         settings={{
           home_features_eyebrow: 'Why learners choose us',
-          home_features_title: 'What you get on every Pathwise programme',
+          home_features_title: 'What you get on every Learning Skills programme',
           home_features_text: 'The same commitments apply whichever course you pick.',
         }}
         features={features}

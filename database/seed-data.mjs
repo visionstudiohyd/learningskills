@@ -1,7 +1,7 @@
 /**
  * SEED CONTENT
  * -----------------------------------------------------------------------------
- * Realistic launch content for Pathwise Academy — the fictional institute this
+ * Realistic launch content for Learning Skills — the fictional institute this
  * platform ships with. Everything here is editable from the admin dashboard;
  * it exists so the site looks like a live business from the first page load
  * rather than an empty template.
@@ -37,7 +37,7 @@ export const heroSlides = [
     title: 'Learn the skill. Prove the skill.',
     highlight: 'Prove the skill.',
     description:
-      'Every Pathwise course ends in assessed project work you can show an employer — not just a certificate with your name on it.',
+      'Every Learning Skills course ends in assessed project work you can show an employer — not just a certificate with your name on it.',
     image: u('1522202176988-66273c2fd55f', 2000),
     overlay_opacity: 72,
     text_align: 'left',
@@ -99,7 +99,7 @@ export const courses = [
       'No prior programming experience required. You will need a laptop with 8GB RAM or more and comfort with written English. A short aptitude conversation replaces any entrance test.',
     career_opportunities:
       'Frontend Developer, Backend Developer, Full-Stack Engineer, Web Application Developer, Junior Software Engineer, Freelance Developer',
-    certification: 'Pathwise Professional Certificate in Full-Stack Development',
+    certification: 'Learning Skills Professional Certificate in Full-Stack Development',
     thumbnail: u('1498050108023-c5249f4df085'),
     banner_image: u('1551434678-e076c223a692', 1800),
     duration: '24 weeks',
@@ -187,7 +187,7 @@ export const courses = [
       'Working knowledge of Linux commands and at least one programming or scripting language. Six months of professional IT experience recommended.',
     career_opportunities:
       'DevOps Engineer, Cloud Engineer, Site Reliability Engineer, Platform Engineer, Build & Release Engineer',
-    certification: 'Pathwise Advanced Certificate in Cloud & DevOps Engineering',
+    certification: 'Learning Skills Advanced Certificate in Cloud & DevOps Engineering',
     thumbnail: u('1486312338219-ce68d2c6f44d'),
     banner_image: u('1497486751825-1233686d8f33', 1800),
     duration: '16 weeks',
@@ -239,7 +239,7 @@ export const courses = [
       'Graduates looking for an entry point into tech, manual testers moving into automation, and support engineers wanting a technical step up.',
     eligibility: 'Graduation in any stream. Basic computer literacy. No programming experience needed to start.',
     career_opportunities: 'QA Engineer, Test Automation Engineer, SDET, QA Analyst, Quality Lead',
-    certification: 'Pathwise Certificate in Software Testing & Automation',
+    certification: 'Learning Skills Certificate in Software Testing & Automation',
     thumbnail: u('1460925895917-afdab827c52f'),
     duration: '14 weeks',
     duration_weeks: 14,
@@ -292,7 +292,7 @@ export const courses = [
       'Comfort with basic spreadsheet formulas. No programming or statistics background required.',
     career_opportunities:
       'Data Analyst, Business Analyst, Reporting Analyst, Insights Analyst, Analytics Consultant, BI Developer',
-    certification: 'Pathwise Professional Certificate in Data Analytics',
+    certification: 'Learning Skills Professional Certificate in Data Analytics',
     thumbnail: u('1551288049-bebda4e38f71'),
     banner_image: u('1460925895917-afdab827c52f', 1800),
     duration: '18 weeks',
@@ -347,7 +347,7 @@ export const courses = [
       'Working Python knowledge, familiarity with pandas, and comfort with basic statistics. Our Data Analytics certificate or equivalent experience.',
     career_opportunities:
       'Machine Learning Engineer, Data Scientist, AI Engineer, Applied Scientist, ML Platform Engineer',
-    certification: 'Pathwise Advanced Certificate in Machine Learning',
+    certification: 'Learning Skills Advanced Certificate in Machine Learning',
     thumbnail: u('1555949963-ff9fe0c870eb'),
     duration: '20 weeks',
     duration_weeks: 20,
@@ -397,7 +397,7 @@ export const courses = [
       'MIS and reporting executives, finance and operations analysts, and anyone who maintains a spreadsheet that has outgrown itself.',
     eligibility: 'Intermediate Excel. No programming background required.',
     career_opportunities: 'BI Developer, Power BI Analyst, MIS Analyst, Reporting Manager, Data Visualisation Specialist',
-    certification: 'Pathwise Certificate in Business Intelligence',
+    certification: 'Learning Skills Certificate in Business Intelligence',
     thumbnail: u('1543286386-713bdd548da4'),
     duration: '10 weeks',
     duration_weeks: 10,
@@ -447,7 +447,7 @@ export const courses = [
     eligibility: 'Graduation in any stream, or two years of work experience. No technical background required.',
     career_opportunities:
       'Digital Marketing Executive, SEO Specialist, Performance Marketing Manager, Social Media Manager, Growth Marketer, Marketing Consultant',
-    certification: 'Pathwise Professional Certificate in Digital Marketing',
+    certification: 'Learning Skills Professional Certificate in Digital Marketing',
     thumbnail: u('1533750349088-cd871a92f312'),
     banner_image: u('1542744173-8e7e53415bb0', 1800),
     duration: '16 weeks',
@@ -499,7 +499,7 @@ export const courses = [
       'Marketing executives specialising in organic, content writers moving into strategy, and agency staff wanting senior-level audit skills.',
     eligibility: 'Six months of marketing or content experience, or our Digital Marketing Professional certificate.',
     career_opportunities: 'SEO Specialist, Content Strategist, Organic Growth Manager, SEO Consultant, Technical SEO Analyst',
-    certification: 'Pathwise Specialist Certificate in SEO & Content Strategy',
+    certification: 'Learning Skills Specialist Certificate in SEO & Content Strategy',
     thumbnail: u('1562577309-4932fdd64cd1'),
     duration: '12 weeks',
     duration_weeks: 12,
@@ -548,7 +548,7 @@ export const courses = [
     eligibility: 'Graduation in any stream, or two years of work experience in any function.',
     career_opportunities:
       'Project Coordinator, Project Manager, Scrum Master, Delivery Manager, Programme Analyst, PMO Executive',
-    certification: 'Pathwise Certificate in Project Management',
+    certification: 'Learning Skills Certificate in Project Management',
     thumbnail: u('1552664730-d307ca884978'),
     banner_image: u('1517048676732-d65bc937f952', 1800),
     duration: '12 weeks',
@@ -599,7 +599,7 @@ export const courses = [
     eligibility: 'Graduation in any stream. HR experience helpful but not required.',
     career_opportunities:
       'HR Executive, HR Generalist, Recruitment Specialist, Payroll Administrator, HR Business Partner',
-    certification: 'Pathwise Certificate in Human Resource Management',
+    certification: 'Learning Skills Certificate in Human Resource Management',
     thumbnail: u('1573496359142-b8d87734a5a2'),
     duration: '14 weeks',
     duration_weeks: 14,
@@ -647,7 +647,7 @@ export const courses = [
     eligibility: 'Basic Excel familiarity: you can enter formulas and format cells.',
     career_opportunities:
       'MIS Executive, Operations Analyst, Finance Executive, Business Analyst, Reporting Specialist',
-    certification: 'Pathwise Certificate in Advanced Excel',
+    certification: 'Learning Skills Certificate in Advanced Excel',
     thumbnail: u('1586281380349-632531db7ed4'),
     duration: '6 weeks',
     duration_weeks: 6,
@@ -697,7 +697,7 @@ export const courses = [
     eligibility: 'No design degree required. Bring curiosity about why interfaces frustrate people.',
     career_opportunities:
       'UI Designer, UX Designer, Product Designer, Interaction Designer, UX Researcher, Design Consultant',
-    certification: 'Pathwise Professional Certificate in UI/UX Design',
+    certification: 'Learning Skills Professional Certificate in UI/UX Design',
     thumbnail: u('1561070791-2526d30994b5'),
     banner_image: u('1581291518857-4e27b48ff24e', 1800),
     duration: '20 weeks',
@@ -750,7 +750,7 @@ export const courses = [
     eligibility: 'No formal background required. A laptop capable of running design software.',
     career_opportunities:
       'Graphic Designer, Brand Designer, Visual Designer, Creative Executive, Freelance Designer, Packaging Designer',
-    certification: 'Pathwise Certificate in Graphic Design',
+    certification: 'Learning Skills Certificate in Graphic Design',
     thumbnail: u('1558655146-9f40138edfeb'),
     duration: '16 weeks',
     duration_weeks: 16,
@@ -800,7 +800,7 @@ export const courses = [
     eligibility: 'Commerce background preferred but not required; the first module builds from first principles.',
     career_opportunities:
       'Accounts Executive, Accountant, Tax Assistant, Audit Assistant, Accounts Payable Specialist, Finance Executive',
-    certification: 'Pathwise Certificate in Financial Accounting & Taxation',
+    certification: 'Learning Skills Certificate in Financial Accounting & Taxation',
     thumbnail: u('1554224155-6726b3ff858f'),
     banner_image: u('1559526324-4b87b5e36e44', 1800),
     duration: '14 weeks',
@@ -853,7 +853,7 @@ export const courses = [
       'Solid accounting knowledge — you can read a balance sheet confidently. Strong Excel skills required.',
     career_opportunities:
       'Financial Analyst, Equity Research Associate, Investment Banking Analyst, Corporate Finance Executive, FP&A Analyst',
-    certification: 'Pathwise Advanced Certificate in Financial Modelling',
+    certification: 'Learning Skills Advanced Certificate in Financial Modelling',
     thumbnail: u('1611974789855-9c2a0a7236a3'),
     duration: '12 weeks',
     duration_weeks: 12,
@@ -905,7 +905,7 @@ export const courses = [
       'Graduation, preferably with a life sciences or nursing background. Strong English comprehension required.',
     career_opportunities:
       'Medical Coder, Medical Biller, Charge Entry Specialist, AR Analyst, Coding Auditor, Revenue Cycle Analyst',
-    certification: 'Pathwise Certificate in Medical Coding & Billing',
+    certification: 'Learning Skills Certificate in Medical Coding & Billing',
     thumbnail: u('1576091160550-2173dba999ef'),
     banner_image: u('1579684385127-1ef15d508118', 1800),
     duration: '16 weeks',
@@ -956,7 +956,7 @@ export const courses = [
     eligibility: 'Graduation in any stream; healthcare exposure helpful.',
     career_opportunities:
       'Hospital Administrator, Operations Executive, Patient Services Manager, Quality & Accreditation Officer, Clinic Manager',
-    certification: 'Pathwise Certificate in Healthcare Administration',
+    certification: 'Learning Skills Certificate in Healthcare Administration',
     thumbnail: u('1538108149393-fbbd81895907'),
     duration: '12 weeks',
     duration_weeks: 12,
@@ -1005,7 +1005,7 @@ export const courses = [
     eligibility: 'Intermediate English (roughly CEFR B1). A placement test sets your target band and group.',
     career_opportunities:
       'Required for university admission, skilled migration, and professional registration in the UK, Australia, Canada and New Zealand.',
-    certification: 'Pathwise IELTS Preparation Completion Certificate',
+    certification: 'Learning Skills IELTS Preparation Completion Certificate',
     thumbnail: u('1456513080510-7bf3a84b82f8'),
     duration: '8 weeks',
     duration_weeks: 8,
@@ -1054,7 +1054,7 @@ export const courses = [
     eligibility: 'Intermediate English. A short conversation places you in the right group.',
     career_opportunities:
       'Improves prospects in any client-facing, leadership or cross-border role; frequently taken before a promotion or an international move.',
-    certification: 'Pathwise Certificate in Business Communication',
+    certification: 'Learning Skills Certificate in Business Communication',
     thumbnail: u('1491841550275-ad7854e35ca6'),
     duration: '8 weeks',
     duration_weeks: 8,
@@ -1103,7 +1103,7 @@ export const courses = [
       'No prior qualification required. A background check is required before any setting-based observation.',
     career_opportunities:
       'Early Years Practitioner, Nursery Assistant, Pre-school Teacher, Teaching Assistant, Childminder, Playgroup Leader',
-    certification: 'Pathwise Certificate in Early Years Care & Education',
+    certification: 'Learning Skills Certificate in Early Years Care & Education',
     thumbnail: u('1509062522246-3755977927d7'),
     banner_image: u('1503676382389-4809596d5290', 1800),
     duration: '12 weeks',
@@ -1154,7 +1154,7 @@ export const courses = [
     eligibility: 'Graduation in any subject. Subject knowledge in what you intend to teach.',
     career_opportunities:
       'School Teacher, Subject Tutor, Corporate Trainer, Teaching Assistant, Coaching Faculty, Online Educator',
-    certification: 'Pathwise Certificate in Teaching & Learning',
+    certification: 'Learning Skills Certificate in Teaching & Learning',
     thumbnail: u('1577896851231-70ef18881754'),
     duration: '10 weeks',
     duration_weeks: 10,
@@ -1460,7 +1460,7 @@ export const trainers = [
   {
     name: 'Dr. Ananya Varma',
     designation: 'Founder & Academic Director',
-    bio: 'Twenty-two years across industry and academia, including eight leading engineering teams before founding Pathwise in 2014. Still teaches the data modelling module personally because, in her words, it is the one people most often get wrong for the longest time.',
+    bio: 'Twenty-two years across industry and academia, including eight leading engineering teams before founding Learning Skills in 2014. Still teaches the data modelling module personally because, in her words, it is the one people most often get wrong for the longest time.',
     photo: u('1559829604-549c5c6b2b7d', 500),
     expertise: 'Curriculum design, data engineering, academic governance',
     experience_years: 22,
@@ -1614,7 +1614,7 @@ export const faqs = [
   {
     question: 'Is the certificate recognised by employers?',
     answer:
-      'Pathwise certificates are industry-recognised professional credentials, not university degrees, and we are careful about that distinction. Their value with employers comes substantially from the assessed project work they represent — which is why every programme ends in something you can show rather than just a transcript. Where a course maps onto an external certification such as CPC, CKA or PMP, the course page says so and we help you prepare for that separate exam.',
+      'Learning Skills certificates are industry-recognised professional credentials, not university degrees, and we are careful about that distinction. Their value with employers comes substantially from the assessed project work they represent — which is why every programme ends in something you can show rather than just a transcript. Where a course maps onto an external certification such as CPC, CKA or PMP, the course page says so and we help you prepare for that separate exam.',
     category: 'Certification & Outcomes',
     show_on_home: 1,
     display_order: 10,
@@ -1654,9 +1654,9 @@ export const pages = [
     page_type: 'system',
     show_in_footer: 1,
     display_order: 1,
-    meta_description: 'How Pathwise Academy collects, uses, stores and protects personal information submitted through course enquiries and contact forms.',
+    meta_description: 'How Learning Skills collects, uses, stores and protects personal information submitted through course enquiries and contact forms.',
     content: `<p><strong>Last updated:</strong> 1 November 2026</p>
-<p>This policy explains what personal information Pathwise Academy collects, why we collect it, and what you can ask us to do with it. It is written to be read, not to be impenetrable — if anything here is unclear, email us and we will explain it plainly.</p>
+<p>This policy explains what personal information Learning Skills collects, why we collect it, and what you can ask us to do with it. It is written to be read, not to be impenetrable — if anything here is unclear, email us and we will explain it plainly.</p>
 
 <h2>What we collect</h2>
 <p>When you submit a course enquiry or contact form we collect your name, email address, phone number, and optionally your city, qualification and any message you write. We also record which courses you selected, the page you submitted from, and your IP address and browser type for security and fraud prevention.</p>
@@ -1697,11 +1697,11 @@ export const pages = [
   {
     title: 'Terms & Conditions',
     slug: 'terms-and-conditions',
-    subtitle: 'The agreement between you and Pathwise Academy.',
+    subtitle: 'The agreement between you and Learning Skills.',
     page_type: 'system',
     show_in_footer: 1,
     display_order: 2,
-    meta_description: 'Terms and conditions governing use of the Pathwise Academy website, course enquiries, enrolment, fees and certification.',
+    meta_description: 'Terms and conditions governing use of the Learning Skills website, course enquiries, enrolment, fees and certification.',
     content: `<p><strong>Last updated:</strong> 1 November 2026</p>
 <p>These terms govern your use of this website and any course enquiry you submit through it. Enrolling on a programme is covered by a separate enrolment agreement, which we send with your offer and which takes precedence where the two differ.</p>
 
@@ -1722,7 +1722,7 @@ export const pages = [
 <p>We expect learners to treat trainers and fellow learners with respect, to submit their own work, and to respect the confidentiality of any case material shared in class. Plagiarism, harassment or sharing course recordings outside the cohort may result in removal from the programme without refund. Those decisions are reviewed by the Academic Director, and you may appeal them.</p>
 
 <h2>Certification</h2>
-<p>Pathwise certificates are professional credentials awarded by us on the basis of assessed work. They are not university degrees and we do not represent them as such. Certificates are issued on meeting the stated attendance and assessment requirements for your programme.</p>
+<p>Learning Skills certificates are professional credentials awarded by us on the basis of assessed work. They are not university degrees and we do not represent them as such. Certificates are issued on meeting the stated attendance and assessment requirements for your programme.</p>
 
 <h2>Placement support</h2>
 <p>Placement support — CV clinics, portfolio review, mock interviews and employer introductions — is provided for twelve months after graduation. It is support, not a guarantee of employment, and we make no promise of a job, a salary level or a specific number of interviews.</p>
@@ -1743,7 +1743,7 @@ export const pages = [
     page_type: 'custom',
     show_in_footer: 1,
     display_order: 3,
-    meta_description: 'Pathwise Academy refund, cancellation, deferral and batch transfer policy, stated in full.',
+    meta_description: 'Learning Skills refund, cancellation, deferral and batch transfer policy, stated in full.',
     content: `<p>Plans change. This page states exactly what happens to your fees when they do, so you are not reading the small print for the first time at the worst moment.</p>
 
 <h2>If you withdraw</h2>

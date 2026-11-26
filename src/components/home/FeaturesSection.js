@@ -18,7 +18,7 @@ export default function FeaturesSection({ settings = {}, features = [], tone = '
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(50rem 25rem at 20% 0%, rgb(67 39 155 / 0.3), transparent 65%), radial-gradient(40rem 20rem at 85% 100%, rgb(15 185 168 / 0.16), transparent 65%)',
+              'radial-gradient(50rem 25rem at 20% 0%, rgb(7 7 88 / 0.3), transparent 65%), radial-gradient(40rem 20rem at 85% 100%, rgb(15 185 168 / 0.16), transparent 65%)',
           }}
           aria-hidden="true"
         />

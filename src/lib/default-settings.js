@@ -27,24 +27,24 @@ export const SETTING_GROUPS = [
  */
 export const DEFAULT_SETTINGS = [
   /* ------------------------------- BRANDING ------------------------------- */
-  { key: 'site_name', label: 'Institute name', type: 'text', group: 'brand', value: 'Pathwise Academy' },
-  { key: 'site_short_name', label: 'Short name / initials', type: 'text', group: 'brand', value: 'Pathwise', description: 'Used in tight spaces such as the mobile header.' },
+  { key: 'site_name', label: 'Institute name', type: 'text', group: 'brand', value: 'Learning Skills' },
+  { key: 'site_short_name', label: 'Short name / initials', type: 'text', group: 'brand', value: 'Learning Skills', description: 'Used in tight spaces such as the mobile header.' },
   { key: 'site_tagline', label: 'Tagline', type: 'text', group: 'brand', value: 'Learn with direction' },
   { key: 'site_logo', label: 'Logo (light background)', type: 'image', group: 'brand', value: '' },
   { key: 'site_logo_light', label: 'Logo (dark background)', type: 'image', group: 'brand', value: '', description: 'Shown on the dark site header. Falls back to the light-background logo when empty.' },
   { key: 'site_favicon', label: 'Favicon', type: 'image', group: 'brand', value: '' },
-  { key: 'brand_color', label: 'Primary brand colour', type: 'color', group: 'brand', value: '#23085a' },
-  { key: 'brand_accent_color', label: 'Accent colour', type: 'color', group: 'brand', value: '#ffb224' },
+  { key: 'brand_color', label: 'Primary brand colour', type: 'color', group: 'brand', value: '#070758' },
+  { key: 'brand_accent_color', label: 'Accent colour', type: 'color', group: 'brand', value: '#e40028' },
   { key: 'site_description', label: 'One-line description', type: 'textarea', group: 'brand', value: 'Career-focused short courses and professional certifications taught by industry practitioners, online and in the classroom.' },
 
   /* -------------------------------- CONTACT ------------------------------- */
   { key: 'contact_phone', label: 'Primary phone', type: 'tel', group: 'contact', value: '+91 98765 43210' },
   { key: 'contact_phone_alt', label: 'Secondary phone', type: 'tel', group: 'contact', value: '' },
   { key: 'contact_whatsapp', label: 'WhatsApp number', type: 'tel', group: 'contact', value: '+91 98765 43210', description: 'Include the country code. Used for the floating WhatsApp button.' },
-  { key: 'contact_email', label: 'Primary email', type: 'email', group: 'contact', value: 'admissions@pathwiseacademy.com' },
+  { key: 'contact_email', label: 'Primary email', type: 'email', group: 'contact', value: 'admissions@learningskills.com' },
   { key: 'contact_email_alt', label: 'Support email', type: 'email', group: 'contact', value: '' },
-  { key: 'contact_address', label: 'Address', type: 'textarea', group: 'contact', value: '4th Floor, Meridian Business Park\nSector 62, Noida, Uttar Pradesh 201301\nIndia' },
-  { key: 'contact_map_embed', label: 'Google Maps embed URL', type: 'url', group: 'contact', value: 'https://www.google.com/maps?q=Sector+62+Noida&output=embed', description: 'Paste the src URL from the Google Maps "Embed a map" share tab.' },
+  { key: 'contact_address', label: 'Address', type: 'textarea', group: 'contact', value: 'Level 3, Cyber Towers, HITEC City\nMadhapur, Hyderabad, Telangana 500081\nIndia' },
+  { key: 'contact_map_embed', label: 'Google Maps embed URL', type: 'url', group: 'contact', value: 'https://www.google.com/maps?q=HITEC+City+Hyderabad&output=embed', description: 'Paste the src URL from the Google Maps "Embed a map" share tab.' },
   { key: 'contact_hours', label: 'Office hours', type: 'textarea', group: 'contact', value: 'Monday – Friday: 9:00 AM – 7:00 PM\nSaturday: 10:00 AM – 4:00 PM\nSunday: Closed' },
   { key: 'contact_response_time', label: 'Stated response time', type: 'text', group: 'contact', value: 'We reply to every enquiry within 24 working hours.' },
 
@@ -59,7 +59,7 @@ export const DEFAULT_SETTINGS = [
   /* ------------------------------- HOMEPAGE ------------------------------- */
   { key: 'home_intro_eyebrow', label: 'Intro · eyebrow', type: 'text', group: 'home', value: 'Who we are' },
   { key: 'home_intro_title', label: 'Intro · heading', type: 'text', group: 'home', value: 'A learning partner built around where you want to go next' },
-  { key: 'home_intro_text', label: 'Intro · paragraph', type: 'textarea', group: 'home', value: 'Pathwise Academy exists for one reason: to turn ambition into a qualification that employers recognise. Every programme is shaped with hiring managers, taught by practitioners, and sized to fit around a working week.' },
+  { key: 'home_intro_text', label: 'Intro · paragraph', type: 'textarea', group: 'home', value: 'Learning Skills exists for one reason: to turn ambition into a qualification that employers recognise. Every programme is shaped with hiring managers, taught by practitioners, and sized to fit around a working week.' },
   { key: 'home_intro_image', label: 'Intro · image', type: 'image', group: 'home', value: '' },
   { key: 'home_intro_secondary_image', label: 'Intro · second image', type: 'image', group: 'home', value: '' },
 
@@ -68,7 +68,7 @@ export const DEFAULT_SETTINGS = [
   { key: 'home_courses_text', label: 'Popular courses · subheading', type: 'textarea', group: 'home', value: 'Short, intensive and career-mapped. Pick the ones that interest you and send a single enquiry.' },
 
 
-  { key: 'home_features_eyebrow', label: 'Benefits · eyebrow', type: 'text', group: 'home', value: 'Why Pathwise' },
+  { key: 'home_features_eyebrow', label: 'Benefits · eyebrow', type: 'text', group: 'home', value: 'Why Learning Skills' },
   { key: 'home_features_title', label: 'Benefits · heading', type: 'text', group: 'home', value: 'Built for people who have a job, a life, and a goal' },
   { key: 'home_features_text', label: 'Benefits · subheading', type: 'textarea', group: 'home', value: 'The things learners tell us made the difference.' },
 
@@ -115,8 +115,8 @@ export const DEFAULT_SETTINGS = [
   { key: 'whatsapp_default_message', label: 'WhatsApp prefilled message', type: 'textarea', group: 'enquiry', value: 'Hello! I would like to know more about your courses.' },
 
   /* ---------------------------------- SEO -------------------------------- */
-  { key: 'seo_title', label: 'Default page title', type: 'text', group: 'seo', value: 'Pathwise Academy — Career-focused courses & professional certifications' },
-  { key: 'seo_title_template', label: 'Title template', type: 'text', group: 'seo', value: '%s | Pathwise Academy', description: 'Use %s where the page name should appear.' },
+  { key: 'seo_title', label: 'Default page title', type: 'text', group: 'seo', value: 'Learning Skills — Career-focused courses & professional certifications' },
+  { key: 'seo_title_template', label: 'Title template', type: 'text', group: 'seo', value: '%s | Learning Skills', description: 'Use %s where the page name should appear.' },
   { key: 'seo_description', label: 'Default meta description', type: 'textarea', group: 'seo', value: 'Industry-designed short courses in technology, business, healthcare and design. Flexible online and classroom batches, practitioner trainers, and recognised certification.' },
   { key: 'seo_keywords', label: 'Default meta keywords', type: 'textarea', group: 'seo', value: 'professional courses, short courses, certification, online learning, career training' },
   { key: 'seo_og_image', label: 'Social share image', type: 'image', group: 'seo', value: '', description: 'Recommended 1200 × 630 px.' },
@@ -124,11 +124,11 @@ export const DEFAULT_SETTINGS = [
   { key: 'seo_robots_index', label: 'Allow search engines to index the site', type: 'boolean', group: 'seo', value: '1' },
 
   /* --------------------------------- FOOTER ------------------------------ */
-  { key: 'footer_about_text', label: 'Footer blurb', type: 'textarea', group: 'footer', value: 'Pathwise Academy trains working professionals and recent graduates in the skills employers are actually hiring for — with batches that fit around real life.' },
+  { key: 'footer_about_text', label: 'Footer blurb', type: 'textarea', group: 'footer', value: 'Learning Skills trains working professionals and recent graduates in the skills employers are actually hiring for — with batches that fit around real life.' },
   { key: 'footer_newsletter_enabled', label: 'Show newsletter signup', type: 'boolean', group: 'footer', value: '0' },
   { key: 'footer_newsletter_title', label: 'Newsletter heading', type: 'text', group: 'footer', value: 'New batches, in your inbox' },
   { key: 'footer_newsletter_text', label: 'Newsletter subheading', type: 'textarea', group: 'footer', value: 'One short email a month: new courses, upcoming batch dates and scholarship windows.' },
-  { key: 'footer_copyright', label: 'Copyright line', type: 'text', group: 'footer', value: 'Pathwise Academy. All rights reserved.' },
+  { key: 'footer_copyright', label: 'Copyright line', type: 'text', group: 'footer', value: 'Learning Skills. All rights reserved.' },
   { key: 'footer_badge_text', label: 'Trust badge text', type: 'text', group: 'footer', value: 'ISO 9001:2015 certified training provider' },
 
   /* ------------------------------ INTEGRATIONS --------------------------- */

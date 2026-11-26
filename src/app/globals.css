@@ -1,41 +1,43 @@
 @import 'tailwindcss';
 
 /* ==========================================================================
-   PATHWISE ACADEMY — DESIGN SYSTEM
+   LEARNING SKILLS — DESIGN SYSTEM
    --------------------------------------------------------------------------
    Brand identity (original, built for this project):
-     • Indigo     — trust, academic authority           → primary surfaces/CTA
-     • Saffron    — energy, momentum, "act now"         → accents, highlights
-     • Teal       — growth, progress, success           → support + status
-     • Ink        — custom cool-neutral greys           → text & chrome
+     • Navy #070758 — trust, academic authority         → primary surfaces
+     • Red  #e40028 — energy, momentum, "act now"       → all buttons/CTA
+     • Teal         — growth, progress, success         → support + status
+     • Ink          — custom cool-neutral greys         → text & chrome
    Typography: Sora (display) + Inter (body/UI)
    ========================================================================== */
 
 @theme {
-  /* ---------------------------- Brand: Indigo ---------------------------- */
-  --color-brand-50: #f3f1fa;
-  --color-brand-100: #e6e2f7;
-  --color-brand-200: #cdc5ed;
-  --color-brand-300: #ac9edf;
-  --color-brand-400: #8672ce;
-  --color-brand-500: #6047b4;
-  --color-brand-600: #43279b;
-  --color-brand-700: #23085a;
-  --color-brand-800: #1b0648;
-  --color-brand-900: #150438;
-  --color-brand-950: #0c0222;
+  /* ----------------------------- Brand: Navy ----------------------------- */
+  /* Primary #070758 */
+  --color-brand-50: #f2f3fb;
+  --color-brand-100: #e4e6f7;
+  --color-brand-200: #c7cbea;
+  --color-brand-300: #9ca3d8;
+  --color-brand-400: #6b74c0;
+  --color-brand-500: #3d4699;
+  --color-brand-600: #1f2578;
+  --color-brand-700: #070758;
+  --color-brand-800: #050640;
+  --color-brand-900: #04042e;
+  --color-brand-950: #02021f;
 
-  /* --------------------------- Accent: Saffron --------------------------- */
-  --color-accent-50: #fff9ed;
-  --color-accent-100: #fff1d4;
-  --color-accent-200: #ffe0a8;
-  --color-accent-300: #ffc96f;
-  --color-accent-400: #ffb224;
-  --color-accent-500: #f99a07;
-  --color-accent-600: #dd7502;
-  --color-accent-700: #b75406;
-  --color-accent-800: #94410c;
-  --color-accent-900: #7a360d;
+  /* ----------------------------- Accent: Red ----------------------------- */
+  /* Buttons/CTA #e40028 */
+  --color-accent-50: #fff1f3;
+  --color-accent-100: #ffdfe4;
+  --color-accent-200: #ffc2cb;
+  --color-accent-300: #ff95a5;
+  --color-accent-400: #ff5570;
+  --color-accent-500: #f71941;
+  --color-accent-600: #e40028;
+  --color-accent-700: #c00022;
+  --color-accent-800: #9b001c;
+  --color-accent-900: #7f0018;
 
   /* ---------------------------- Support: Teal ---------------------------- */
   --color-teal-50: #eafdf8;
@@ -86,9 +88,9 @@
   /* ------------------------------ Shadows -------------------------------- */
   --shadow-soft: 0 1px 2px rgb(14 18 34 / 0.04), 0 4px 16px -4px rgb(14 18 34 / 0.08);
   --shadow-card: 0 2px 4px rgb(14 18 34 / 0.03), 0 12px 32px -8px rgb(14 18 34 / 0.12);
-  --shadow-lift: 0 4px 8px rgb(14 18 34 / 0.04), 0 24px 48px -12px rgb(35 8 90 / 0.25);
-  --shadow-brand: 0 10px 30px -10px rgb(67 39 155 / 0.5);
-  --shadow-accent: 0 10px 30px -10px rgb(249 154 7 / 0.45);
+  --shadow-lift: 0 4px 8px rgb(14 18 34 / 0.04), 0 24px 48px -12px rgb(7 7 88 / 0.25);
+  --shadow-brand: 0 10px 30px -10px rgb(228 0 40 / 0.45);
+  --shadow-accent: 0 10px 30px -10px rgb(228 0 40 / 0.45);
   --shadow-inner-top: inset 0 1px 0 rgb(255 255 255 / 0.1);
 
   /* ------------------------------ Easing --------------------------------- */
@@ -175,20 +177,20 @@
 
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 rgb(249 154 7 / 0.55);
+    box-shadow: 0 0 0 0 rgb(228 0 40 / 0.55);
   }
   70% {
-    box-shadow: 0 0 0 18px rgb(249 154 7 / 0);
+    box-shadow: 0 0 0 18px rgb(228 0 40 / 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgb(249 154 7 / 0);
+    box-shadow: 0 0 0 0 rgb(228 0 40 / 0);
   }
 }
 
 /* ============================== BASE LAYER ================================ */
 @layer base {
   :root {
-    --header-height: 5rem;
+    --header-height: 4.375rem;
     --page-gutter: 1.25rem;
     --surface: var(--color-ink-50);
     --surface-raised: #ffffff;
@@ -305,38 +307,15 @@
     }
   }
 
+  /* Section rhythm is capped at 50px top and bottom at every breakpoint. */
   .section {
-    padding-block: 4.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .section {
-      padding-block: 6rem;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .section {
-      padding-block: 7rem;
-    }
+    padding-block: 3.125rem;
   }
 
   /* Compact rhythm for the homepage so a whole section sits inside the
      viewport instead of running past the fold. */
   .home-compact .section {
     padding-block: 2.75rem;
-  }
-
-  @media (min-width: 768px) {
-    .home-compact .section {
-      padding-block: 3.5rem;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .home-compact .section {
-      padding-block: 4.5rem;
-    }
   }
 
   /* ------------------------------ Buttons -------------------------------- */
@@ -347,11 +326,13 @@
     gap: 0.5rem;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     letter-spacing: -0.01em;
     white-space: nowrap;
     border-radius: var(--radius-pill);
-    padding: 0.8125rem 1.5rem;
+    height: 2.8125rem;
+    max-height: 2.8125rem;
+    padding: 0 1.5rem;
     transition:
       transform 0.25s var(--ease-out-soft),
       box-shadow 0.25s var(--ease-out-soft),
@@ -368,26 +349,20 @@
     transform: none !important;
   }
 
-  .btn-primary {
-    background-image: linear-gradient(135deg, var(--color-brand-500), var(--color-brand-700));
-    color: #fff;
-    box-shadow: var(--shadow-brand);
-  }
-
-  .btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 36px -12px rgb(67 39 155 / 0.65);
-  }
-
+  /* Every button in the UI uses the red action colour (#e40028). */
+  .btn-primary,
   .btn-accent {
-    background-image: linear-gradient(135deg, var(--color-accent-400), var(--color-accent-600));
-    color: var(--color-ink-950);
+    background-color: var(--color-accent-600);
+    background-image: none;
+    color: #fff;
     box-shadow: var(--shadow-accent);
   }
 
+  .btn-primary:hover:not(:disabled),
   .btn-accent:hover:not(:disabled) {
+    background-color: var(--color-accent-700);
     transform: translateY(-2px);
-    box-shadow: 0 16px 36px -12px rgb(249 154 7 / 0.6);
+    box-shadow: 0 16px 36px -12px rgb(228 0 40 / 0.6);
   }
 
   .btn-outline {
@@ -418,13 +393,13 @@
   }
 
   .btn-lg {
-    padding: 1rem 1.875rem;
-    font-size: 1rem;
+    padding: 0 1.875rem;
+    font-size: 0.875rem;
   }
 
   .btn-sm {
-    padding: 0.5625rem 1.125rem;
-    font-size: 0.8125rem;
+    padding: 0 1.125rem;
+    font-size: 0.875rem;
   }
 
   /* ------------------------------- Chips -------------------------------- */
@@ -504,7 +479,7 @@
   .field:focus {
     outline: none;
     border-color: var(--color-brand-500);
-    box-shadow: 0 0 0 4px rgb(35 8 90 / 0.14);
+    box-shadow: 0 0 0 4px rgb(7 7 88 / 0.14);
   }
 
   .field-error {

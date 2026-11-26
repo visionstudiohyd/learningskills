@@ -17,7 +17,7 @@ export default function CtaSection({ settings = {} }) {
   const waLink = wa ? whatsappLink(wa, settings.whatsapp_default_message) : '';
 
   return (
-    <section className="relative overflow-hidden bg-ink-950 py-14 md:py-20">
+    <section className="relative overflow-hidden bg-ink-950 py-12">
       <SmartImage
         src={settings.home_cta_image || DEFAULT_BG}
         alt=""
@@ -34,7 +34,6 @@ export default function CtaSection({ settings = {} }) {
         }}
         aria-hidden="true"
       />
-      <div className="hairline-grid pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
 
       <div className="shell relative grid gap-8 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-12">
         <div>

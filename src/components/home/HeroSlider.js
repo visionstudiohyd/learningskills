@@ -144,7 +144,6 @@ export default function HeroSlider({ slides = [] }) {
         );
       })}
 
-      <div className="hairline-grid pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
 
       {/* ------------------------------ content ------------------------------- */}
       <div className="shell relative z-10 py-12 md:py-16">

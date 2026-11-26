@@ -11,7 +11,7 @@ import ShortlistButton from '@/components/shortlist/ShortlistButton';
 /**
  * Site header.
  *
- * A deep sky-blue gradient sits behind the bar on every page and the
+ * The flat primary navy sits behind the bar on every page and the
  * Courses item opens a panel listing the leading programmes on desktop
  * (hover + keyboard) and an inline expander on mobile.
  */
@@ -22,6 +22,35 @@ export default function HeaderClient({ settings, menu = [], menuCourses = [] }) 
   const [coursesOpen, setCoursesOpen] = useState(false);
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
   const closeTimer = useRef(null);
+  const [hideHeader, setHideHeader] = useState(false);
+  const lastScrollY = useRef(0);
+
+  // Only keep the bar pinned while the visitor is at the top or scrolling up;
+  // it slides away as soon as they scroll down.
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+    let ticking = false;
+
+    const update = () => {
+      const y = window.scrollY;
+      const delta = y - lastScrollY.current;
+      if (y <= 80) setHideHeader(false);
+      else if (delta > 6) setHideHeader(true);
+      else if (delta < -6) setHideHeader(false);
+      lastScrollY.current = y;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Close everything on navigation.
   useEffect(() => {
@@ -48,7 +77,7 @@ export default function HeaderClient({ settings, menu = [], menuCourses = [] }) 
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const siteName = settings.site_name || 'Pathwise Academy';
+  const siteName = settings.site_name || 'Learning Skills';
   const logo = settings.site_logo_light || settings.site_logo;
   const phone = settings.contact_phone;
 
@@ -70,7 +99,12 @@ export default function HeaderClient({ settings, menu = [], menuCourses = [] }) 
   return (
     <>
       {/* ------------------------------- header ------------------------------ */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-linear-to-r from-sky-950 via-sky-900 to-cyan-800/95 shadow-[0_1px_24px_-10px_rgb(2_6_23/0.65)] backdrop-blur-xl transition-all duration-300">
+      <header
+        className={cx(
+          'sticky top-0 z-50 border-b border-white/10 bg-brand-700 shadow-[0_1px_24px_-10px_rgb(2_6_23/0.65)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform',
+          hideHeader && !mobileOpen && '-translate-y-full'
+        )}
+      >
         <div className="shell flex h-[var(--header-height)] items-center justify-between gap-4">
           {/* brand */}
           <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${siteName} — home`}>
@@ -91,7 +125,7 @@ export default function HeaderClient({ settings, menu = [], menuCourses = [] }) 
                     {siteName}
                   </span>
                   {settings.site_tagline && (
-                    <span className="mt-1 hidden text-[0.6875rem] font-medium tracking-wide text-sky-200/80 transition-colors sm:block">
+                    <span className="mt-1 hidden text-[0.6875rem] font-medium tracking-wide text-brand-200/80 transition-colors sm:block">
                       {settings.site_tagline}
                     </span>
                   )}
@@ -121,7 +155,7 @@ export default function HeaderClient({ settings, menu = [], menuCourses = [] }) 
                         'flex items-center gap-1 rounded-full px-3.5 py-2 text-[0.9375rem] font-medium transition-colors',
                         isActive(item.url)
                           ? 'bg-white/15 text-white'
-                          : 'text-sky-100/85 hover:bg-white/10 hover:text-white'
+                          : 'text-brand-100/85 hover:bg-white/10 hover:text-white'
                       )}
                     >
                       {item.label}
@@ -201,7 +235,7 @@ export default function HeaderClient({ settings, menu = [], menuCourses = [] }) 
                     'rounded-full px-3.5 py-2 text-[0.9375rem] font-medium transition-colors',
                     isActive(item.url)
                       ? 'bg-white/15 text-white'
-                      : 'text-sky-100/85 hover:bg-white/10 hover:text-white'
+                      : 'text-brand-100/85 hover:bg-white/10 hover:text-white'
                   )}
                 >
                   {item.label}

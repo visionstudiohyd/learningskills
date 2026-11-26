@@ -27,7 +27,7 @@ export default function PageHero({
     <section
       className={cx(
         'relative isolate overflow-hidden bg-ink-950',
-        size === 'compact' ? 'pb-10 pt-12 md:pb-12 md:pt-16' : 'pb-14 pt-14 md:pb-20 md:pt-20'
+        size === 'compact' ? 'pb-9 pt-9 md:pb-12 md:pt-12' : 'pb-10 pt-10 md:pb-12 md:pt-12'
       )}
     >
       <SmartImage src={image || DEFAULT_BANNER} alt="" fill sizes="100vw" quality={76} className="object-cover" />

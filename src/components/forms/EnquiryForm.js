@@ -480,7 +480,7 @@ export default function EnquiryForm({
         </p>
       )}
 
-      <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-lg w-full">
+      <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-lg my-3 w-full">
         {isSubmitting ? (
           <>
             <Loader2 className="h-4.5 w-4.5 animate-spin" />

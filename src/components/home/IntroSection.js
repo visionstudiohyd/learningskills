@@ -32,7 +32,7 @@ export default function IntroSection({ settings = {} }) {
             <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] shadow-[var(--shadow-lift)] sm:aspect-4/3">
               <SmartImage
                 src={settings.home_intro_image || DEFAULT_PRIMARY}
-                alt="Learners working together in a Pathwise Academy session"
+                alt="Learners working together in a Learning Skills session"
                 fill
                 sizes="(max-width: 1024px) 90vw, 36rem"
               />

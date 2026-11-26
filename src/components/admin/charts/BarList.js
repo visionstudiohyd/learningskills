@@ -15,7 +15,7 @@ import { cx, formatNumber } from '@/lib/utils';
  */
 
 const STATUS_DOTS = {
-  brand: '#23085a',
+  brand: '#070758',
   teal: '#0d9488',
   accent: '#dd7502',
   success: '#059669',

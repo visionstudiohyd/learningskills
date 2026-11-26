@@ -15,7 +15,7 @@ const SUBJECTS = [
   'Corporate / group training',
   'Scholarships',
   'Certificate or transcript',
-  'Careers at Pathwise',
+  'Careers at Learning Skills',
   'Something else',
 ];
 

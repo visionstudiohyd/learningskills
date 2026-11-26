@@ -16,7 +16,7 @@ import { cx } from '@/lib/utils';
  * A table view is available for anyone who needs the exact numbers.
  */
 
-const BRAND = '#23085a';
+const BRAND = '#070758';
 
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;

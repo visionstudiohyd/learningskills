@@ -1,4 +1,4 @@
-# Pathwise Academy — Course Enquiry Platform
+# Learning Skills — Course Enquiry Platform
 
 A complete educational course showcase and lead-generation platform: public marketing site, course
 catalogue, multi-course enquiry system, and a full admin dashboard that manages every piece of
@@ -7,7 +7,7 @@ content without touching code.
 Built with **Next.js 16**, **React 19**, **Tailwind CSS 4** and **MySQL/MariaDB** — plain JavaScript
 throughout, no TypeScript.
 
-> **Pathwise Academy** is the placeholder brand this project ships with. The institute name, logo,
+> **Learning Skills** is the placeholder brand this project ships with. The institute name, logo,
 > colours, contact details and every line of copy are database-driven and editable from
 > **Settings** — no code change needed to rebrand.
 
@@ -35,7 +35,7 @@ npm run dev
 |---|---|
 | Public site | <http://localhost:3000> |
 | Admin dashboard | <http://localhost:3000/admin> |
-| Default login | `admin@pathwiseacademy.com` / `Admin@12345` |
+| Default login | `admin@learningskills.com` / `Admin@12345` |
 
 **Change that password** from *My profile* after signing in the first time.
 

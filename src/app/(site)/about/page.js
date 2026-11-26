@@ -1,14 +1,11 @@
-import Link from 'next/link';
-import { ArrowRight, Compass, Flag, Lightbulb, Linkedin, Mail, Quote, Target, Twitter } from 'lucide-react';
+import { Compass, Lightbulb, Linkedin, Mail, Quote, Target, Twitter } from 'lucide-react';
 import { getSettings } from '@/lib/settings';
-import { getFeatures, getStats, getTestimonials, getTrainers } from '@/lib/queries/content';
+import { getStats, getTrainers } from '@/lib/queries/content';
 import PageHero from '@/components/layout/PageHero';
 import Reveal from '@/components/ui/Reveal';
 import SectionHeading from '@/components/ui/SectionHeading';
 import SmartImage from '@/components/ui/SmartImage';
 import Counter from '@/components/ui/Counter';
-import FeaturesSection from '@/components/home/FeaturesSection';
-import TestimonialsSection from '@/components/home/TestimonialsSection';
 import CtaSection from '@/components/home/CtaSection';
 
 export const revalidate = 300;
@@ -83,13 +80,7 @@ const METHOD_STEPS = [
 ];
 
 export default async function AboutPage() {
-  const [settings, trainers, stats, features, testimonials] = await Promise.all([
-    getSettings(),
-    getTrainers(8),
-    getStats(4),
-    getFeatures({ placement: 'about', limit: 6 }),
-    getTestimonials({ limit: 8 }),
-  ]);
+  const [settings, trainers, stats] = await Promise.all([getSettings(), getTrainers(4), getStats(4)]);
 
   return (
     <>
@@ -139,7 +130,7 @@ export default async function AboutPage() {
             />
             <div className="mt-6 space-y-4 text-[1.0625rem] leading-relaxed text-ink-600">
               <p>
-                Pathwise Academy exists because its founders kept interviewing candidates who held certificates but
+                Learning Skills exists because its founders kept interviewing candidates who held certificates but
                 could not do the work. The certificates were not fraudulent — the courses behind them had simply been
                 designed around what was convenient to teach and easy to assess.
               </p>
@@ -226,7 +217,7 @@ export default async function AboutPage() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(50rem 25rem at 15% 0%, rgb(67 39 155 / 0.32), transparent 65%), radial-gradient(40rem 20rem at 90% 100%, rgb(15 185 168 / 0.15), transparent 65%)',
+              'radial-gradient(50rem 25rem at 15% 0%, rgb(7 7 88 / 0.32), transparent 65%), radial-gradient(40rem 20rem at 90% 100%, rgb(15 185 168 / 0.15), transparent 65%)',
           }}
           aria-hidden="true"
         />
@@ -265,7 +256,7 @@ export default async function AboutPage() {
             />
 
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {trainers.map((trainer, i) => (
+              {trainers.slice(0, 4).map((trainer, i) => (
                 <Reveal key={trainer.id} delay={(i % 4) * 80}>
                   <article className="group h-full overflow-hidden rounded-[var(--radius-card)] border border-ink-200 bg-white transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[var(--shadow-lift)]">
                     <div className="relative aspect-4/5 overflow-hidden bg-ink-100">
@@ -349,51 +340,6 @@ export default async function AboutPage() {
           </div>
         </section>
       )}
-
-      {features.length > 0 && (
-        <FeaturesSection
-          settings={{
-            home_features_eyebrow: 'Why choose Pathwise',
-            home_features_title: 'What learners tell us made the difference',
-            home_features_text: 'Drawn from exit surveys across recent cohorts.',
-          }}
-          features={features}
-        />
-      )}
-
-      {testimonials.length > 0 && (
-        <TestimonialsSection
-          settings={{
-            home_testimonials_eyebrow: 'In their words',
-            home_testimonials_title: 'Graduates on what actually changed',
-            home_testimonials_text: 'Unedited, and published with permission.',
-          }}
-          testimonials={testimonials}
-        />
-      )}
-
-      {/* ---------------------------- closing links -------------------------- */}
-      <section className="section bg-white">
-        <div className="shell flex flex-col items-center gap-6 rounded-[var(--radius-card)] border border-ink-200 bg-ink-50 px-6 py-10 text-center md:px-10">
-          <Flag className="h-10 w-10 text-brand-500" strokeWidth={1.8} />
-          <h2 className="max-w-2xl font-display text-2xl font-bold text-ink-950 md:text-3xl">
-            Still deciding whether we are the right fit?
-          </h2>
-          <p className="max-w-2xl text-[1.0625rem] leading-relaxed text-ink-600">
-            Ask an advisor directly. They are measured on whether learners finish and benefit, not on how many they
-            enrol — so you will get a straight answer about whether a programme suits your goal.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/contact" className="btn btn-primary btn-lg">
-              Talk to an advisor
-              <ArrowRight className="h-4.5 w-4.5" strokeWidth={2.4} />
-            </Link>
-            <Link href="/courses" className="btn btn-outline btn-lg">
-              Browse all programmes
-            </Link>
-          </div>
-        </div>
-      </section>
 
       <CtaSection settings={settings} />
     </>

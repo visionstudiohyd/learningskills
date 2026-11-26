@@ -36,7 +36,7 @@ const FRESH = process.argv.includes('--fresh');
 
 const ADMIN = {
   name: 'Site Administrator',
-  email: process.env.SEED_ADMIN_EMAIL || 'admin@pathwiseacademy.com',
+  email: process.env.SEED_ADMIN_EMAIL || 'admin@learningskills.com',
   password: process.env.SEED_ADMIN_PASSWORD || 'Admin@12345',
   role: 'super_admin',
 };

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Clock, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Send, Twitter, Youtube } from 'lucide-react';
+import { ArrowRight, Clock, Facebook, Flag, Instagram, Linkedin, Mail, MapPin, Phone, Send, Twitter, Youtube } from 'lucide-react';
 import { getSettings } from '@/lib/settings';
 import { getMenu } from '@/lib/queries/content';
 import { getMenuCourses } from '@/lib/queries/courses';
@@ -17,9 +17,8 @@ const SOCIAL_ICONS = {
 };
 
 export default async function Footer() {
-  const [settings, primary, secondary, popularCourses] = await Promise.all([
+  const [settings, secondary, popularCourses] = await Promise.all([
     getSettings(),
-    getMenu('footer_primary'),
     getMenu('footer_secondary'),
     getMenuCourses(6),
   ]);
@@ -38,17 +37,29 @@ export default async function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-auto overflow-hidden bg-ink-950 text-white">
-      {/* subtle brand wash + grid */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-70"
-        style={{
-          background:
-            'radial-gradient(60rem 30rem at 10% 0%, rgb(67 39 155 / 0.35), transparent 60%), radial-gradient(45rem 25rem at 90% 10%, rgb(15 185 168 / 0.18), transparent 60%)',
-        }}
-        aria-hidden="true"
-      />
-      <div className="hairline-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden="true" />
+    <footer className="relative mt-auto overflow-hidden bg-[#262626] text-white">
+      {/* --------------------------- advisor prompt -------------------------- */}
+      <div className="relative border-b border-white/10 bg-ink-50 text-ink-800">
+        <div className="shell flex flex-col items-center gap-6 py-12 text-center">
+          <Flag className="h-10 w-10 text-brand-500" strokeWidth={1.8} />
+          <h2 className="max-w-2xl font-display text-2xl font-bold text-ink-950 md:text-3xl">
+            Still deciding whether we are the right fit?
+          </h2>
+          <p className="max-w-2xl text-[1.0625rem] leading-relaxed text-ink-600">
+            Ask an advisor directly. They are measured on whether learners finish and benefit, not on how many they
+            enrol — so you will get a straight answer about whether a programme suits your goal.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link href="/contact" className="btn btn-primary btn-lg">
+              Talk to an advisor
+              <ArrowRight className="h-4.5 w-4.5" strokeWidth={2.4} />
+            </Link>
+            <Link href="/courses" className="btn btn-outline btn-lg">
+              Browse all programmes
+            </Link>
+          </div>
+        </div>
+      </div>
 
       {/* ----------------------------- newsletter ---------------------------- */}
       {toBool(settings.footer_newsletter_enabled) && (
@@ -69,7 +80,7 @@ export default async function Footer() {
 
       {/* ------------------------------- columns ----------------------------- */}
       <div className="relative">
-        <div className="shell grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.3fr] lg:gap-8">
+        <div className="shell grid gap-10 py-12 md:grid-cols-3 md:gap-8">
           {/* brand */}
           <div>
             <Link href="/" className="inline-flex items-center gap-2.5" aria-label={`${settings.site_name} — home`}>
@@ -89,7 +100,7 @@ export default async function Footer() {
                     className="grid h-11 w-11 place-items-center rounded-xl bg-linear-to-br from-brand-400 to-brand-600 font-display text-lg font-extrabold text-white"
                     aria-hidden="true"
                   >
-                    {String(settings.site_name || 'P').charAt(0)}
+                    {String(settings.site_name || 'L').charAt(0)}
                   </span>
                   <span className="font-display text-[1.0625rem] font-extrabold tracking-tight text-white">
                     {settings.site_name}
@@ -129,25 +140,6 @@ export default async function Footer() {
               </div>
             )}
           </div>
-
-          {/* quick links */}
-          <nav aria-label="Footer navigation">
-            <h3 className="font-display text-sm font-bold uppercase tracking-[0.14em] text-white/50">Explore</h3>
-            <ul className="mt-5 space-y-3 text-[0.9375rem]">
-              {primary.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    href={item.url}
-                    target={item.open_new_tab ? '_blank' : undefined}
-                    rel={item.open_new_tab ? 'noopener noreferrer' : undefined}
-                    className="inline-block text-white/65 transition-all duration-200 hover:translate-x-0.5 hover:text-accent-300"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
 
           {/* popular courses */}
           <nav aria-label="Popular courses">

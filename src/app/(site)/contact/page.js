@@ -74,7 +74,7 @@ export default async function ContactPage() {
       value: settings.contact_phone,
       note: settings.contact_phone_alt ? `Also: ${settings.contact_phone_alt}` : 'During office hours',
       icon: Phone,
-      colour: '#23085a',
+      colour: '#070758',
     },
     settings.contact_email && {
       key: 'email',
@@ -83,7 +83,7 @@ export default async function ContactPage() {
       value: settings.contact_email,
       note: settings.contact_response_time || 'We reply within 24 working hours',
       icon: Mail,
-      colour: '#f99a07',
+      colour: '#e40028',
     },
   ].filter(Boolean);
 

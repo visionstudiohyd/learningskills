@@ -21,7 +21,7 @@ export default async function AdminLoginPage({ searchParams }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(45rem 24rem at 50% -5%, rgb(67 39 155 / 0.4), transparent 65%), radial-gradient(32rem 18rem at 85% 100%, rgb(15 185 168 / 0.18), transparent 65%)',
+            'radial-gradient(45rem 24rem at 50% -5%, rgb(7 7 88 / 0.4), transparent 65%), radial-gradient(32rem 18rem at 85% 100%, rgb(15 185 168 / 0.18), transparent 65%)',
         }}
         aria-hidden="true"
       />
