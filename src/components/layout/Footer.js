@@ -37,11 +37,11 @@ export default async function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-auto overflow-hidden bg-[#262626] text-white">
+    <footer className="relative mt-auto overflow-hidden bg-brand-900 text-white">
       {/* --------------------------- advisor prompt -------------------------- */}
       <div className="relative border-b border-white/10 bg-ink-50 text-ink-800">
         <div className="shell flex flex-col items-center gap-6 py-12 text-center">
-          <Flag className="h-10 w-10 text-brand-500" strokeWidth={1.8} />
+          <Flag className="h-10 w-10 text-brand-600" strokeWidth={1.8} />
           <h2 className="max-w-2xl font-display text-2xl font-bold text-ink-950 md:text-3xl">
             Still deciding whether we are the right fit?
           </h2>
@@ -97,7 +97,7 @@ export default async function Footer() {
               ) : (
                 <>
                   <span
-                    className="grid h-11 w-11 place-items-center rounded-xl bg-linear-to-br from-brand-400 to-brand-600 font-display text-lg font-extrabold text-white"
+                    className="grid h-11 w-11 place-items-center rounded-xl bg-accent-600 font-display text-lg font-extrabold text-brand-950"
                     aria-hidden="true"
                   >
                     {String(settings.site_name || 'L').charAt(0)}

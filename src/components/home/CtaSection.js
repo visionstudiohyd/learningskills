@@ -30,7 +30,7 @@ export default function CtaSection({ settings = {} }) {
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(115deg, rgb(20 22 58 / 0.96) 0%, rgb(14 18 34 / 0.9) 45%, rgb(35 8 90 / 0.78) 100%)',
+            'linear-gradient(115deg, rgb(21 14 9 / 0.96) 0%, rgb(42 27 18 / 0.9) 45%, rgb(56 36 24 / 0.78) 100%)',
         }}
         aria-hidden="true"
       />

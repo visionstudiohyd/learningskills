@@ -115,7 +115,7 @@ export default function HeaderClient({ settings, menu = [], menuCourses = [] }) 
             ) : (
               <>
                 <span
-                  className="grid h-11 w-11 place-items-center rounded-xl bg-linear-to-br from-brand-500 to-brand-700 font-display text-lg font-extrabold text-white shadow-[var(--shadow-brand)] transition-all"
+                  className="grid h-11 w-11 place-items-center rounded-xl bg-accent-600 font-display text-lg font-extrabold text-brand-950 shadow-[var(--shadow-brand)] transition-all"
                   aria-hidden="true"
                 >
                   {siteName.charAt(0).toUpperCase()}
@@ -125,7 +125,7 @@ export default function HeaderClient({ settings, menu = [], menuCourses = [] }) 
                     {siteName}
                   </span>
                   {settings.site_tagline && (
-                    <span className="mt-1 hidden text-[0.6875rem] font-medium tracking-wide text-brand-200/80 transition-colors sm:block">
+                    <span className="mt-1 hidden text-[0.6875rem] font-medium tracking-wide text-accent-200/80 transition-colors sm:block">
                       {settings.site_tagline}
                     </span>
                   )}

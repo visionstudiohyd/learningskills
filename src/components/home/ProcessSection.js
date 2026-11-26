@@ -36,7 +36,7 @@ export default function ProcessSection({ settings = {}, steps = [] }) {
               <Reveal as="li" key={step.id} delay={i * 110} className="relative">
                 {/* numbered node */}
                 <div className="flex items-center gap-4 lg:flex-col lg:items-start">
-                  <span className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-brand-500 to-brand-700 text-white shadow-[var(--shadow-brand)] ring-4 ring-white">
+                  <span className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-brand-700 text-white shadow-[var(--shadow-brand)] ring-4 ring-white">
                     <Icon name={step.icon} className="h-6 w-6" strokeWidth={2.2} />
                     <span className="absolute -right-1.5 -top-1.5 grid h-6 w-6 place-items-center rounded-full bg-accent-400 font-display text-[0.6875rem] font-extrabold text-ink-950 ring-2 ring-white">
                       {step.step_label}

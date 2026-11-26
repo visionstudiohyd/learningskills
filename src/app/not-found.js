@@ -20,7 +20,7 @@ export default function NotFound() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(45rem 24rem at 50% 0%, rgb(7 7 88 / 0.35), transparent 65%), radial-gradient(35rem 18rem at 85% 100%, rgb(249 154 7 / 0.14), transparent 65%)',
+            'radial-gradient(45rem 24rem at 50% 0%, rgb(56 36 24 / 0.45), transparent 65%), radial-gradient(35rem 18rem at 85% 100%, rgb(142 197 255 / 0.16), transparent 65%)',
         }}
         aria-hidden="true"
       />
@@ -34,7 +34,7 @@ export default function NotFound() {
           404
         </p>
 
-        <span className="mx-auto -mt-10 grid h-16 w-16 place-items-center rounded-2xl bg-linear-to-br from-brand-500 to-brand-700 text-white shadow-[var(--shadow-brand)]">
+        <span className="mx-auto -mt-10 grid h-16 w-16 place-items-center rounded-2xl bg-brand-700 text-white shadow-[var(--shadow-brand)]">
           <Compass className="h-8 w-8" strokeWidth={1.9} />
         </span>
 

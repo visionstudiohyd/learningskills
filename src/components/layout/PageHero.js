@@ -35,7 +35,7 @@ export default function PageHero({
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(105deg, rgb(14 18 34 / 0.95) 0%, rgb(20 22 58 / 0.9) 50%, rgb(35 8 90 / 0.76) 100%)',
+            'linear-gradient(105deg, rgb(21 14 9 / 0.95) 0%, rgb(42 27 18 / 0.9) 50%, rgb(56 36 24 / 0.76) 100%)',
         }}
         aria-hidden="true"
       />

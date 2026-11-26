@@ -134,9 +134,9 @@ export default function HeroSlider({ slides = [] }) {
             <div
               className="absolute inset-0"
               style={{
-                background: `linear-gradient(100deg, rgb(14 18 34 / ${(slide.overlay_opacity ?? 65) / 100}) 0%, rgb(14 18 34 / ${
+                background: `linear-gradient(100deg, rgb(21 14 9 / ${(slide.overlay_opacity ?? 65) / 100}) 0%, rgb(21 14 9 / ${
                   ((slide.overlay_opacity ?? 65) / 100) * 0.82
-                }) 45%, rgb(20 22 58 / 0.35) 100%)`,
+                }) 45%, rgb(42 27 18 / 0.35) 100%)`,
               }}
               aria-hidden="true"
             />

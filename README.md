@@ -189,18 +189,20 @@ Defined entirely in `src/app/globals.css` as Tailwind 4 `@theme` tokens.
 
 | Role | Colour | Used for |
 |---|---|---|
-| Brand | Indigo `#4f5bd5` | Primary actions, links, chart marks |
-| Accent | Saffron `#ffb224` | Enquiry CTAs, highlights, badges |
-| Support | Teal `#0fb9a8` | Success, progress, confirmation |
-| Neutral | Custom cool "Ink" scale | Text, borders, surfaces |
+| Brand | Brown `#382418` | Header, footer, headings, dark sections |
+| Accent | Blue `#8ec5ff` | All buttons, badges, links, highlights |
+| Surface | Cream `#f2e8da` | Page background behind sections |
+| Neutral | Warm "Ink" scale | Text, borders, cards |
 
 Typography pairs **Sora** (display) with **Inter** (body/UI), both self-hosted through
 `next/font`. Accessibility is built in rather than retrofitted: visible focus rings, `prefers-reduced-motion`
 honoured throughout, labelled form controls, `aria-live` regions on async results, keyboard-operable
 carousels and accordions, and a skip-to-content link.
 
-The admin brand colour and accent are editable in Settings; the dashboard charts follow the same
-palette rules (one series per chart, so identity comes from labels rather than hue).
+All three colours are editable in **Admin → Settings → Branding**. `src/lib/palette.js` derives the
+full shade scales from those three hex values and the root layout injects them as CSS variables, so
+the whole site re-tints without a code change. The dashboard charts follow the same palette rules
+(one series per chart, so identity comes from labels rather than hue).
 
 ---
 

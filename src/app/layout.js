@@ -1,5 +1,6 @@
 import { Inter, Sora } from 'next/font/google';
 import { getSettings } from '@/lib/settings';
+import { themeStyle } from '@/lib/palette';
 import { toBool } from '@/lib/utils';
 import './globals.css';
 
@@ -53,17 +54,26 @@ export async function generateMetadata() {
   };
 }
 
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  themeColor: '#070758',
-  colorScheme: 'light',
-};
+export async function generateViewport() {
+  const s = await getSettings();
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    themeColor: s.brand_color || '#382418',
+    colorScheme: 'light',
+  };
+}
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const settings = await getSettings();
+
   return (
     <html lang="en" className={`${inter.variable} ${sora.variable}`}>
-      <body>{children}</body>
+      <body>
+        {/* Brand colours chosen in Admin → Settings → Branding. */}
+        <style dangerouslySetInnerHTML={{ __html: themeStyle(settings) }} />
+        {children}
+      </body>
     </html>
   );
 }

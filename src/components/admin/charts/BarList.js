@@ -15,12 +15,12 @@ import { cx, formatNumber } from '@/lib/utils';
  */
 
 const STATUS_DOTS = {
-  brand: '#070758',
-  teal: '#0d9488',
-  accent: '#dd7502',
-  success: '#059669',
-  neutral: '#7b85a6',
-  danger: '#e11d48',
+  brand: 'var(--color-brand-700)',
+  teal: 'var(--color-teal-600)',
+  accent: 'var(--color-accent-600)',
+  success: 'var(--color-teal-600)',
+  neutral: 'var(--color-ink-500)',
+  danger: '#b23b3b',
 };
 
 export default function BarList({

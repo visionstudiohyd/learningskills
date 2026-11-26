@@ -3,66 +3,67 @@
 /* ==========================================================================
    LEARNING SKILLS — DESIGN SYSTEM
    --------------------------------------------------------------------------
-   Brand identity (original, built for this project):
-     • Navy #070758 — trust, academic authority         → primary surfaces
-     • Red  #e40028 — energy, momentum, "act now"       → all buttons/CTA
-     • Teal         — growth, progress, success         → support + status
-     • Ink          — custom cool-neutral greys         → text & chrome
+   Brand identity (editable in Admin → Settings → Branding):
+     • Brown #382418 — trust, academic authority        → primary surfaces
+     • Blue  #8ec5ff — energy, momentum, "act now"      → all buttons/CTA
+     • Cream #f2e8da — warmth, breathing room           → page background
+     • Ink           — warm neutral greys               → text & chrome
    Typography: Sora (display) + Inter (body/UI)
    ========================================================================== */
 
 @theme {
-  /* ----------------------------- Brand: Navy ----------------------------- */
-  /* Primary #070758 */
-  --color-brand-50: #f2f3fb;
-  --color-brand-100: #e4e6f7;
-  --color-brand-200: #c7cbea;
-  --color-brand-300: #9ca3d8;
-  --color-brand-400: #6b74c0;
-  --color-brand-500: #3d4699;
-  --color-brand-600: #1f2578;
-  --color-brand-700: #070758;
-  --color-brand-800: #050640;
-  --color-brand-900: #04042e;
-  --color-brand-950: #02021f;
+  /* ---------------------------- Brand: Brown ----------------------------- */
+  /* Primary #382418 — also re-generated from Admin → Settings → Branding */
+  --color-brand-50: #f3f2f1;
+  --color-brand-100: #e5e2e0;
+  --color-brand-200: #c8c2bf;
+  --color-brand-300: #aba39e;
+  --color-brand-400: #8e837c;
+  --color-brand-500: #72635b;
+  --color-brand-600: #554439;
+  --color-brand-700: #382418;
+  --color-brand-800: #2a1b12;
+  --color-brand-900: #1c120c;
+  --color-brand-950: #150e09;
 
-  /* ----------------------------- Accent: Red ----------------------------- */
-  /* Buttons/CTA #e40028 */
-  --color-accent-50: #fff1f3;
-  --color-accent-100: #ffdfe4;
-  --color-accent-200: #ffc2cb;
-  --color-accent-300: #ff95a5;
-  --color-accent-400: #ff5570;
-  --color-accent-500: #f71941;
-  --color-accent-600: #e40028;
-  --color-accent-700: #c00022;
-  --color-accent-800: #9b001c;
-  --color-accent-900: #7f0018;
+  /* ---------------------------- Accent: Blue ----------------------------- */
+  /* Buttons/CTA #8ec5ff — also re-generated from the admin colour setting */
+  --color-accent-50: #f8fcff;
+  --color-accent-100: #eff7ff;
+  --color-accent-200: #dbedff;
+  --color-accent-300: #c8e3ff;
+  --color-accent-400: #b5d9ff;
+  --color-accent-500: #a1cfff;
+  --color-accent-600: #8ec5ff;
+  --color-accent-700: #405973;
+  --color-accent-800: #2e4053;
+  --color-accent-900: #1d2834;
+  --color-accent-950: #141c24;
 
-  /* ---------------------------- Support: Teal ---------------------------- */
-  --color-teal-50: #eafdf8;
-  --color-teal-100: #cdf9ee;
-  --color-teal-200: #a0f1e0;
-  --color-teal-300: #63e3ce;
-  --color-teal-400: #2bcdb6;
-  --color-teal-500: #0fb9a8;
-  --color-teal-600: #049485;
-  --color-teal-700: #09756c;
-  --color-teal-800: #0d5d57;
-  --color-teal-900: #104d49;
+  /* --------------------------- Support: Blue ----------------------------- */
+  --color-teal-50: #f0f7ff;
+  --color-teal-100: #deedff;
+  --color-teal-200: #c2ddff;
+  --color-teal-300: #8ec5ff;
+  --color-teal-400: #61a8f5;
+  --color-teal-500: #3f8ce0;
+  --color-teal-600: #2a6fb5;
+  --color-teal-700: #245c94;
+  --color-teal-800: #234d78;
+  --color-teal-900: #203f61;
 
-  /* ------------------------ Neutrals: cool "Ink" ------------------------- */
-  --color-ink-50: #f7f8fc;
-  --color-ink-100: #eef0f7;
-  --color-ink-200: #dde1ed;
-  --color-ink-300: #c2c8dc;
-  --color-ink-400: #9aa3c0;
-  --color-ink-500: #7b85a6;
-  --color-ink-600: #616a8a;
-  --color-ink-700: #4e5570;
-  --color-ink-800: #3a405c;
-  --color-ink-900: #23283f;
-  --color-ink-950: #0e1222;
+  /* ------------------------ Neutrals: warm "Ink" ------------------------- */
+  --color-ink-50: #f8f4ee;
+  --color-ink-100: #f1eae0;
+  --color-ink-200: #e3d9cb;
+  --color-ink-300: #cdbfad;
+  --color-ink-400: #ab9984;
+  --color-ink-500: #8b7862;
+  --color-ink-600: #6f5d49;
+  --color-ink-700: #5a4a39;
+  --color-ink-800: #48392b;
+  --color-ink-900: #352619;
+  --color-ink-950: #211811;
 
   /* ------------------------------ Typography ----------------------------- */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -88,9 +89,9 @@
   /* ------------------------------ Shadows -------------------------------- */
   --shadow-soft: 0 1px 2px rgb(14 18 34 / 0.04), 0 4px 16px -4px rgb(14 18 34 / 0.08);
   --shadow-card: 0 2px 4px rgb(14 18 34 / 0.03), 0 12px 32px -8px rgb(14 18 34 / 0.12);
-  --shadow-lift: 0 4px 8px rgb(14 18 34 / 0.04), 0 24px 48px -12px rgb(7 7 88 / 0.25);
-  --shadow-brand: 0 10px 30px -10px rgb(228 0 40 / 0.45);
-  --shadow-accent: 0 10px 30px -10px rgb(228 0 40 / 0.45);
+  --shadow-lift: 0 4px 8px rgb(56 36 24 / 0.04), 0 24px 48px -12px rgb(56 36 24 / 0.25);
+  --shadow-brand: 0 10px 30px -10px color-mix(in srgb, var(--color-brand-700) 45%, transparent);
+  --shadow-accent: 0 10px 30px -10px color-mix(in srgb, var(--color-accent-600) 45%, transparent);
   --shadow-inner-top: inset 0 1px 0 rgb(255 255 255 / 0.1);
 
   /* ------------------------------ Easing --------------------------------- */
@@ -177,13 +178,13 @@
 
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 rgb(228 0 40 / 0.55);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-600) 55%, transparent);
   }
   70% {
-    box-shadow: 0 0 0 18px rgb(228 0 40 / 0);
+    box-shadow: 0 0 0 18px color-mix(in srgb, var(--color-accent-600) 0%, transparent);
   }
   100% {
-    box-shadow: 0 0 0 0 rgb(228 0 40 / 0);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-600) 0%, transparent);
   }
 }
 
@@ -192,8 +193,8 @@
   :root {
     --header-height: 4.375rem;
     --page-gutter: 1.25rem;
-    --surface: var(--color-ink-50);
-    --surface-raised: #ffffff;
+    --surface: #f2e8da;
+    --surface-raised: #fffaf2;
     --hairline: var(--color-ink-200);
   }
 
@@ -242,14 +243,14 @@
 
   /* Visible, on-brand focus ring for keyboard users only. */
   :focus-visible {
-    outline: 2px solid var(--color-brand-500);
+    outline: 2px solid var(--color-brand-600);
     outline-offset: 3px;
     border-radius: 4px;
   }
 
   ::selection {
-    background-color: var(--color-brand-500);
-    color: #fff;
+    background-color: var(--color-brand-700);
+    color: #f2e8da;
   }
 
   /* Slimmer, brand-tinted scrollbar on desktop. */
@@ -349,25 +350,26 @@
     transform: none !important;
   }
 
-  /* Every button in the UI uses the red action colour (#e40028). */
+  /* Every button in the UI uses the blue action colour (#8ec5ff) with
+     dark-brown text; both values follow Admin → Settings → Branding. */
   .btn-primary,
   .btn-accent {
-    background-color: var(--color-accent-600);
+    background-color: var(--color-action, var(--color-accent-600));
     background-image: none;
-    color: #fff;
+    color: var(--color-action-ink, var(--color-brand-950));
     box-shadow: var(--shadow-accent);
   }
 
   .btn-primary:hover:not(:disabled),
   .btn-accent:hover:not(:disabled) {
-    background-color: var(--color-accent-700);
+    background-color: var(--color-action-hover, var(--color-accent-700));
     transform: translateY(-2px);
-    box-shadow: 0 16px 36px -12px rgb(228 0 40 / 0.6);
+    box-shadow: 0 16px 36px -12px color-mix(in srgb, var(--color-accent-600) 60%, transparent);
   }
 
   .btn-outline {
     border: 1.5px solid var(--color-ink-300);
-    background-color: #fff;
+    background-color: var(--surface-raised);
     color: var(--color-ink-900);
   }
 
@@ -458,7 +460,7 @@
     width: 100%;
     border: 1.5px solid var(--color-ink-200);
     border-radius: 0.75rem;
-    background-color: #fff;
+    background-color: #ffffff;
     padding: 0.75rem 0.9375rem;
     font-size: 0.9375rem;
     color: var(--color-ink-900);
@@ -478,8 +480,8 @@
 
   .field:focus {
     outline: none;
-    border-color: var(--color-brand-500);
-    box-shadow: 0 0 0 4px rgb(7 7 88 / 0.14);
+    border-color: var(--color-brand-600);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand-700) 14%, transparent);
   }
 
   .field-error {
@@ -493,7 +495,7 @@
 
   /* ----------------------------- Utilities ------------------------------ */
   .gradient-text {
-    background-image: linear-gradient(120deg, var(--color-brand-500), var(--color-teal-500) 55%, var(--color-accent-400));
+    background-image: linear-gradient(120deg, var(--color-brand-600), var(--color-accent-500));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -613,7 +615,7 @@
   }
 
   .prose-cms blockquote {
-    border-left: 3px solid var(--color-accent-400);
+    border-left: 3px solid var(--color-accent-600);
     background-color: var(--color-accent-50);
     padding: 1rem 1.25rem;
     border-radius: 0 0.75rem 0.75rem 0;

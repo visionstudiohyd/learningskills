@@ -10,7 +10,7 @@
  */
 
 export const SETTING_GROUPS = [
-  { key: 'brand', label: 'Branding', icon: 'Palette', description: 'Institute name, logo, favicon and brand voice.' },
+  { key: 'brand', label: 'Branding', icon: 'Palette', description: 'Institute name, logo, favicon, site colours and brand voice.' },
   { key: 'contact', label: 'Contact Details', icon: 'PhoneCall', description: 'Phone, email, address, map and office hours.' },
   { key: 'social', label: 'Social Links', icon: 'Share2', description: 'Social profiles shown in the header and footer.' },
   { key: 'home', label: 'Homepage Content', icon: 'LayoutDashboard', description: 'Section headings and copy on the homepage.' },
@@ -33,8 +33,9 @@ export const DEFAULT_SETTINGS = [
   { key: 'site_logo', label: 'Logo (light background)', type: 'image', group: 'brand', value: '' },
   { key: 'site_logo_light', label: 'Logo (dark background)', type: 'image', group: 'brand', value: '', description: 'Shown on the dark site header. Falls back to the light-background logo when empty.' },
   { key: 'site_favicon', label: 'Favicon', type: 'image', group: 'brand', value: '' },
-  { key: 'brand_color', label: 'Primary brand colour', type: 'color', group: 'brand', value: '#070758' },
-  { key: 'brand_accent_color', label: 'Accent colour', type: 'color', group: 'brand', value: '#e40028' },
+  { key: 'brand_color', label: 'Primary brand colour', type: 'color', group: 'brand', value: '#382418', description: 'Dark surfaces: header, footer, headlines and dark sections.' },
+  { key: 'brand_accent_color', label: 'Button / accent colour', type: 'color', group: 'brand', value: '#8ec5ff', description: 'All buttons, badges, links and highlights.' },
+  { key: 'brand_surface_color', label: 'Page background colour', type: 'color', group: 'brand', value: '#f2e8da', description: 'The light background used behind sections across the site.' },
   { key: 'site_description', label: 'One-line description', type: 'textarea', group: 'brand', value: 'Career-focused short courses and professional certifications taught by industry practitioners, online and in the classroom.' },
 
   /* -------------------------------- CONTACT ------------------------------- */

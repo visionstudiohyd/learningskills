@@ -182,7 +182,7 @@ function BooleanField({ id, value, onChange, label, help }) {
 /*  COLOUR                                                                    */
 /* ========================================================================== */
 function ColorField({ id, value, onChange }) {
-  const safe = /^#[0-9a-f]{6}$/i.test(value || '') ? value : '#070758';
+  const safe = /^#[0-9a-f]{6}$/i.test(value || '') ? value : '#382418';
   return (
     <div className="flex items-center gap-2.5">
       <input
@@ -197,7 +197,7 @@ function ColorField({ id, value, onChange }) {
         type="text"
         value={value || ''}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="#070758"
+        placeholder="#382418"
         className="field flex-1 font-mono text-sm"
       />
     </div>

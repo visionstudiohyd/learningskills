@@ -196,7 +196,7 @@ export default async function AboutPage() {
             {PILLARS.map((pillar, i) => (
               <Reveal key={pillar.label} delay={i * 90}>
                 <article className="h-full rounded-[var(--radius-card)] border border-ink-200 bg-ink-50 p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-[var(--shadow-lift)]">
-                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-linear-to-br from-brand-500 to-brand-700 text-white shadow-[var(--shadow-brand)]">
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-brand-700 text-white shadow-[var(--shadow-brand)]">
                     <pillar.icon className="h-6 w-6" strokeWidth={2.1} />
                   </span>
                   <p className="mt-5 font-display text-xs font-bold uppercase tracking-[0.14em] text-brand-600">
@@ -217,7 +217,7 @@ export default async function AboutPage() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(50rem 25rem at 15% 0%, rgb(7 7 88 / 0.32), transparent 65%), radial-gradient(40rem 20rem at 90% 100%, rgb(15 185 168 / 0.15), transparent 65%)',
+              'radial-gradient(50rem 25rem at 15% 0%, rgb(56 36 24 / 0.45), transparent 65%), radial-gradient(40rem 20rem at 90% 100%, rgb(142 197 255 / 0.16), transparent 65%)',
           }}
           aria-hidden="true"
         />

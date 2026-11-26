@@ -16,7 +16,7 @@ import { cx } from '@/lib/utils';
  * A table view is available for anyone who needs the exact numbers.
  */
 
-const BRAND = '#070758';
+const BRAND = 'var(--color-brand-700)';
 
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
@@ -114,27 +114,27 @@ export default function EnquiryTrendChart({ data = [], days = 30 }) {
                   </linearGradient>
                 </defs>
 
-                <CartesianGrid stroke="#eef0f7" strokeWidth={1} vertical={false} />
+                <CartesianGrid stroke="var(--color-ink-100)" strokeWidth={1} vertical={false} />
 
                 <XAxis
                   dataKey="label"
                   interval={tickInterval}
-                  tick={{ fill: '#7b85a6', fontSize: 11 }}
+                  tick={{ fill: 'var(--color-ink-500)', fontSize: 11 }}
                   tickLine={false}
-                  axisLine={{ stroke: '#dde1ed' }}
+                  axisLine={{ stroke: 'var(--color-ink-200)' }}
                   dy={6}
                 />
                 <YAxis
                   allowDecimals={false}
                   width={46}
-                  tick={{ fill: '#7b85a6', fontSize: 11 }}
+                  tick={{ fill: 'var(--color-ink-500)', fontSize: 11 }}
                   tickLine={false}
                   axisLine={false}
                 />
 
                 <Tooltip
                   content={<ChartTooltip />}
-                  cursor={{ stroke: '#c2c8dc', strokeWidth: 1 }}
+                  cursor={{ stroke: 'var(--color-ink-300)', strokeWidth: 1 }}
                 />
 
                 <Area
@@ -146,7 +146,7 @@ export default function EnquiryTrendChart({ data = [], days = 30 }) {
                   strokeLinecap="round"
                   fill="url(#enquiryWash)"
                   dot={false}
-                  activeDot={{ r: 4.5, fill: BRAND, stroke: '#ffffff', strokeWidth: 2 }}
+                  activeDot={{ r: 4.5, fill: BRAND, stroke: 'var(--surface-raised)', strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>

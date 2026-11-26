@@ -21,7 +21,7 @@ export default async function AdminLoginPage({ searchParams }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(45rem 24rem at 50% -5%, rgb(7 7 88 / 0.4), transparent 65%), radial-gradient(32rem 18rem at 85% 100%, rgb(15 185 168 / 0.18), transparent 65%)',
+            'radial-gradient(45rem 24rem at 50% -5%, rgb(56 36 24 / 0.5), transparent 65%), radial-gradient(32rem 18rem at 85% 100%, rgb(142 197 255 / 0.18), transparent 65%)',
         }}
         aria-hidden="true"
       />
@@ -38,7 +38,7 @@ export default async function AdminLoginPage({ searchParams }) {
 
         <div className="rounded-[1.5rem] border border-white/12 bg-white/[0.06] p-7 backdrop-blur-xl md:p-9">
           <div className="flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-xl bg-linear-to-br from-brand-400 to-brand-600 text-white shadow-[var(--shadow-brand)]">
+            <span className="grid h-12 w-12 place-items-center rounded-xl bg-brand-700 text-white shadow-[var(--shadow-brand)]">
               <GraduationCap className="h-6 w-6" strokeWidth={2.1} />
             </span>
             <div>
