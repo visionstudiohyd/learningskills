@@ -19,6 +19,13 @@ const nextConfig = {
   },
   // mysql2 must stay a real Node module (never bundled for the edge runtime).
   serverExternalPackages: ['mysql2', 'bcryptjs'],
+  experimental: {
+    // cPanel/CloudLinux accounts cap concurrent processes (LVE NPROC). Next's
+    // default of one static-generation worker per task spawns ~30 processes
+    // during `next build` and the build dies with EAGAIN. One worker keeps the
+    // build inside the cap; it is slower but reliable on shared hosting.
+    cpus: 1,
+  },
   async headers() {
     return [
       {

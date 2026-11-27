@@ -207,14 +207,28 @@ questions altogether.
 
 1. Upload the project (exclude `node_modules` and `.next`)
 2. cPanel → **Setup Node.js App** → create an application
-   - Node version: 20 or newer
-   - Application root: your upload directory
-   - Startup file: `node_modules/next/dist/bin/next`
+   - Node version: 20 or newer (22 LTS is what this project was deployed on)
+   - Application root: the project directory, e.g. `ilearningskills_app`
+   - Application URL: the domain, with an empty path so it serves the site root
+   - Startup file: **`server.js`** — not `next start`. Passenger hands the app an already-bound
+     socket (a UNIX path in `PORT`), which `next start` cannot use; `server.js` does.
 3. Add the environment variables from §2.3, except:
    - `DB_HOST=localhost` (discrete variables are simpler here than a URL)
    - `MEDIA_DRIVER=local` — a real filesystem is available, so disk uploads work
-4. Run `npm install` then `npm run build` from the app's terminal
-5. Set the start command to `next start -p $PORT`
+4. Install and build, then restart the app
+
+### Building on shared hosting
+
+Three things bite on a cPanel/CloudLinux box that do not exist locally:
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `Turbopack is not supported on this platform` / `GLIBC_2.29 not found` | The native SWC binaries need a newer glibc than the host provides, so only the WASM bindings load, and Turbopack refuses WASM | Build with webpack: `npm run build -- --webpack` |
+| Build dies with `spawn … EAGAIN` during *Collecting page data* | The account's process cap (LVE NPROC) is hit because Next spawns one static-generation worker per task | `experimental.cpus: 1` in `next.config.mjs` (already set) |
+| Build fails with `Disk quota exceeded` | `node_modules`, `.next` and npm's cache share the account quota | Point npm's cache off the account: `.npmrc` with `cache=/tmp/npm-cache`; delete `~/.npm`, `~/.cache` and `.next/cache` when space runs low |
+
+The first deploy on a 1 GB quota lands around 880 MB used, so clear `.next/cache` before each
+rebuild if you get close to the limit.
 
 Trade-off: you lose Vercel's CDN, image optimisation pipeline and automatic deploys, and shared
 hosting is typically slower under load. You gain a single bill, `localhost` database access and

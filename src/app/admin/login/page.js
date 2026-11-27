@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { ArrowLeft, GraduationCap, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, GraduationCap } from 'lucide-react';
 import { getSettings } from '@/lib/settings';
-import { checkConnection } from '@/lib/db';
 import LoginForm from '@/components/admin/LoginForm';
 
 export const metadata = {
@@ -13,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminLoginPage({ searchParams }) {
   const sp = (await searchParams) || {};
-  const [settings, dbStatus] = await Promise.all([getSettings(), checkConnection()]);
+  const settings = await getSettings();
 
   return (
     <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-ink-950 px-5 py-12">
@@ -56,9 +55,9 @@ export default async function AdminLoginPage({ searchParams }) {
 
           <LoginForm nextPath={typeof sp.next === 'string' ? sp.next : '/admin'} />
 
-          {/* Connection state — the single most common cause of a failed first
-              login is MySQL not running, so say so plainly rather than letting
-              the attempt fail with a generic error. */}
+          {/* Connection state — disabled for production: it printed the database
+              name and host on a public sign-in page. Restore the block below
+              (and the checkConnection() call in the fetcher) to bring it back.
           <div className="mt-7 border-t border-white/10 pt-5">
             {dbStatus.ok ? (
               <p className="flex items-center gap-2 text-xs text-white/45">
@@ -78,6 +77,7 @@ export default async function AdminLoginPage({ searchParams }) {
               </div>
             )}
           </div>
+          */}
         </div>
 
         <p className="mt-6 text-center text-xs text-white/35">
