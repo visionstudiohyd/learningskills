@@ -1,0 +1,70 @@
+name: Deploy to cPanel
+
+# Rebuild the live site after every push to main.
+#
+# The server has no SSH access, so GitHub cannot run the build itself: this job
+# asks the app to rebuild (POST /api/deploy), then polls until the server-side
+# script reports success or failure. See DEPLOYMENT.md → "Automatic redeploys".
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   DEPLOY_URL     https://www.ilearningskills.com  (no trailing slash needed)
+#   DEPLOY_SECRET  the same value as DEPLOY_SECRET in the cPanel Node.js app
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-cpanel
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    env:
+      DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
+      DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
+
+    steps:
+      - name: Trigger the rebuild
+        run: |
+          if [ -z "$DEPLOY_URL" ] || [ -z "$DEPLOY_SECRET" ]; then
+            echo "::error::Set the DEPLOY_URL and DEPLOY_SECRET repository secrets."
+            exit 1
+          fi
+
+          curl -sS --fail-with-body -X POST "${DEPLOY_URL%/}/api/deploy" \
+            -H "Authorization: Bearer $DEPLOY_SECRET" \
+            -H "Content-Type: application/json" \
+            -d "{\"commit\":\"${GITHUB_SHA}\"}"
+          echo
+
+      - name: Wait for the build to finish
+        run: |
+          for attempt in $(seq 1 120); do
+            sleep 15
+
+            body=$(curl -sS -H "Authorization: Bearer $DEPLOY_SECRET" "${DEPLOY_URL%/}/api/deploy")
+            state=$(printf '%s' "$body" | sed -n 's/.*"state": *"\([a-z]*\)".*/\1/p')
+            step=$(printf '%s' "$body" | sed -n 's/.*"step": *"\([^"]*\)".*/\1/p')
+
+            echo "attempt ${attempt}: state=${state:-unknown} step=${step:-unknown}"
+
+            case "$state" in
+              success)
+                echo "Deployment finished."
+                exit 0
+                ;;
+              failed)
+                echo "::error::Deployment failed on the server — see .deploy/deploy.log there."
+                echo "$body"
+                exit 1
+                ;;
+            esac
+          done
+
+          echo "::error::Timed out after 30 minutes waiting for the build."
+          exit 1

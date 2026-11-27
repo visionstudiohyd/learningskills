@@ -80,9 +80,7 @@ export default async function AdminLoginPage({ searchParams }) {
           */}
         </div>
 
-        <p className="mt-6 text-center text-xs text-white/35">
-          Authorised access only. Sign-in attempts are rate limited and logged.
-        </p>
+        
       </div>
     </div>
   );
