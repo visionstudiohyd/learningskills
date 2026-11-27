@@ -82,6 +82,6 @@ export default async function AdminLoginPage({ searchParams }) {
 
         
       </div>
-    </div>
+    </div>   
   );
 }
