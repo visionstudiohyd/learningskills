@@ -186,51 +186,82 @@ jobs:
         run: |
           printf '%s\n' "$GITHUB_SHA" > restart.txt
 
-          # The host's FTP certificate does not match the hostname, so verify is
-          # off; traffic is still TLS-protected.
-          cat > deploy.lftp <<EOF
+          # Settings shared by every lftp invocation below. The host's FTP
+          # certificate does not match the hostname, so verification is off;
+          # the traffic is still TLS-protected.
+          cat > lftp.rc <<EOF
           set ftp:ssl-allow yes
           set ssl:verify-certificate no
           set ftp:ssl-protect-data yes
           set net:max-retries 3
           set net:timeout 30
+          set cmd:fail-exit yes
           open -u "$FTP_USER","$FTP_PASS" "$FTP_HOST"
           cd "$APP_DIR"
+          EOF
 
-          # Clear any leftover Turbopack externals shim, which lftp would not
-          # overwrite on its own. Tolerate it being absent - the normal case
-          # from here on.
+          # The upload runs as three separate lftp sessions rather than one, so
+          # that a failure in the optional middle phase cannot skip the restart
+          # at the end. That is not hypothetical: a deploy once uploaded a
+          # perfect build, hit an error on the public/ mirror, and exited before
+          # writing tmp/restart.txt - so the host went on serving the old broken
+          # build while the fixed one sat on disk, unused and invisible.
+
+          # 1. The build. This is the only payload that matters, so any failure
+          #    here must stop the deploy.
+          #
+          #    --delete prunes the previous build's content-hashed chunks, which
+          #    would otherwise pile up against the account quota, and removes a
+          #    Turbopack externals shim left behind by an older deploy. "cache"
+          #    is the local webpack/ISR cache and is not wanted on the host.
+          cat lftp.rc > step.lftp
+          cat >> step.lftp <<'EOF'
           set cmd:fail-exit no
           rm -rf .next/node_modules
           set cmd:fail-exit yes
-
-          # --delete prunes the previous build's chunks, whose filenames are
-          # content-hashed and would otherwise pile up against the account
-          # quota. The running process keeps serving the build it has already
-          # loaded; the restart at the end picks the new one up. "cache" is the
-          # local webpack/ISR cache and is not wanted on the host.
           mirror --reverse --delete --verbose --parallel=4 --exclude '^cache/' .next .next
+          bye
+          EOF
+          lftp -f step.lftp
 
-          # public/ is read from disk at runtime, so new static assets ship too.
-          # No --delete here, and uploads/ is excluded outright, so the media
-          # the admin has uploaded on the server is never touched.
+          # 2. Files the server reads from disk on every boot but which rarely
+          #    change: public/ static assets, next.config.mjs (read by the Next
+          #    server), server.js (the Passenger entry point) and package.json
+          #    (for its "type": "module"). Best-effort on purpose - see above.
+          #    The verification steps at the end still decide the run outcome,
+          #    so a genuinely broken deploy cannot pass because of this.
+          #
+          #    No --delete on public, and uploads/ is excluded outright, so the
+          #    media uploaded through the admin is never touched by a deploy.
+          cat lftp.rc > step.lftp
+          cat >> step.lftp <<'EOF'
           mirror --reverse --verbose --parallel=4 --exclude '^uploads/' public public
-
-          # Read from disk on every boot: next.config.mjs by the Next server,
-          # server.js by Passenger, package.json for its "type": "module".
           put next.config.mjs -o next.config.mjs
           put server.js -o server.js
           put package.json -o package.json
           put package-lock.json -o package-lock.json
+          bye
+          EOF
+          if ! lftp -f step.lftp; then
+            echo "::warning::Could not sync public/ and the root config files. The build itself uploaded fine, so the deploy continues to the restart. Re-check this if a new static asset or a next.config.mjs / server.js change has not taken effect."
+          fi
 
-          # Passenger restarts when this file's mtime changes; its contents
-          # record which commit is live.
+          # 3. Activate the new build. Passenger restarts when tmp/restart.txt
+          #    changes mtime, and the contents record which commit is live.
+          #    The mkdir is deliberate: tmp/ is easy to lose (a File Manager
+          #    cleanup removes it), and without it the put fails and the new
+          #    build never gets activated at all.
+          cat lftp.rc > step.lftp
+          cat >> step.lftp <<'EOF'
+          set cmd:fail-exit no
+          mkdir -p tmp
+          set cmd:fail-exit yes
           put restart.txt -o tmp/restart.txt
           bye
           EOF
+          lftp -f step.lftp
 
-          lftp -f deploy.lftp
-          rm -f deploy.lftp
+          rm -f lftp.rc step.lftp
 
       - name: Wait for the site to come back
         run: |
