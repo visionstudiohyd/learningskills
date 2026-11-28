@@ -2,13 +2,19 @@ name: Deploy to cPanel
 
 # Rebuild the live site after every push to main.
 #
-# The server has no SSH access, so GitHub cannot run the build itself: this job
-# asks the app to rebuild (POST /api/deploy), then polls until the server-side
-# script reports success or failure. See DEPLOYMENT.md → "Automatic redeploys".
+# The cPanel host cannot compile this app: the account runs with a 1 GB soft /
+# 2 GB hard virtual-memory cap, which crashes the WASM SWC fallback that Next
+# needs because the host's glibc is too old for the native SWC binary. So the
+# build runs here on GitHub's runners and only the compiled `.next` bundle is
+# uploaded over FTP; the server just restarts (tmp/restart.txt is touched).
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
-#   DEPLOY_URL     https://www.ilearningskills.com  (no trailing slash needed)
-#   DEPLOY_SECRET  the same value as DEPLOY_SECRET in the cPanel Node.js app
+#   FTP_HOST  ftp.ilearningskills.com
+#   FTP_USER  the FTP account whose home directory is the app root
+#   FTP_PASS  that account's password
+#
+# Dependency changes still need a one-off `npm install` on the server, because
+# only the build output is uploaded. See DEPLOYMENT.md → "Automatic redeploys".
 
 on:
   push:
@@ -20,77 +26,70 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  rebuild:
+  deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 30
 
     env:
-      DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
-      DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
+      FTP_HOST: ${{ secrets.FTP_HOST }}
+      FTP_USER: ${{ secrets.FTP_USER }}
+      FTP_PASS: ${{ secrets.FTP_PASS }}
+      SITE_URL: https://www.ilearningskills.com
 
     steps:
-      - name: Trigger the rebuild
+      - name: Check secrets
         run: |
-          if [ -z "$DEPLOY_URL" ] || [ -z "$DEPLOY_SECRET" ]; then
-            echo "::error::Set the DEPLOY_URL and DEPLOY_SECRET repository secrets (Settings → Secrets and variables → Actions)."
+          if [ -z "$FTP_HOST" ] || [ -z "$FTP_USER" ] || [ -z "$FTP_PASS" ]; then
+            echo "::error::Set the FTP_HOST, FTP_USER and FTP_PASS repository secrets (Settings → Secrets and variables → Actions)."
             exit 1
           fi
 
-          code=$(curl -sS -o /tmp/trigger.json -w '%{http_code}' -X POST "${DEPLOY_URL%/}/api/deploy" \
-            -H "Authorization: Bearer $DEPLOY_SECRET" \
-            -H "Content-Type: application/json" \
-            -d "{\"commit\":\"${GITHUB_SHA}\"}")
-          echo "POST /api/deploy -> HTTP $code"
-          head -c 400 /tmp/trigger.json; echo
+      - uses: actions/checkout@v4
 
-          case "$code" in
-            202)
-              echo "Rebuild queued on the server."
-              ;;
-            409)
-              echo "A rebuild is already running on the server — waiting for it instead."
-              ;;
-            401)
-              echo "::error::HTTP 401 — the server rejected DEPLOY_SECRET. It must match exactly (no quotes, no trailing spaces) in the cPanel Node.js app environment and in the GitHub secret."
-              exit 1
-              ;;
-            404)
-              echo "::error::HTTP 404 — /api/deploy does not exist in the running build yet. Run the one-time bootstrap in DEPLOYMENT.md → 'Automatic redeploys', then re-run this workflow."
-              exit 1
-              ;;
-            503)
-              echo "::error::HTTP 503 — DEPLOY_SECRET is not set in the cPanel Node.js app environment. Add it there and restart the app."
-              exit 1
-              ;;
-            *)
-              echo "::error::Unexpected response from the server (HTTP $code). See DEPLOYMENT.md → 'Automatic redeploys'."
-              exit 1
-              ;;
-          esac
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
 
-      - name: Wait for the build to finish
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload the build over FTP
         run: |
-          for attempt in $(seq 1 120); do
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lftp
+
+          # The host's FTP certificate does not match the hostname, so verify is
+          # off; traffic is still TLS-protected.
+          printf '%s\n' "$GITHUB_SHA" > restart.txt
+          cat > deploy.lftp <<EOF
+          set ftp:ssl-allow yes
+          set ssl:verify-certificate no
+          set ftp:ssl-protect-data yes
+          set net:max-retries 3
+          set net:timeout 30
+          open -u "$FTP_USER","$FTP_PASS" "$FTP_HOST"
+          mirror --reverse --delete --verbose --exclude-glob cache --parallel=4 .next .next
+          put restart.txt -o tmp/restart.txt
+          bye
+          EOF
+
+          lftp -f deploy.lftp
+
+      - name: Wait for the site to come back
+        run: |
+          for attempt in $(seq 1 20); do
             sleep 15
-
-            body=$(curl -sS -H "Authorization: Bearer $DEPLOY_SECRET" "${DEPLOY_URL%/}/api/deploy")
-            state=$(printf '%s' "$body" | sed -n 's/.*"state": *"\([a-z]*\)".*/\1/p')
-            step=$(printf '%s' "$body" | sed -n 's/.*"step": *"\([^"]*\)".*/\1/p')
-
-            echo "attempt ${attempt}: state=${state:-unknown} step=${step:-unknown}"
-
-            case "$state" in
-              success)
-                echo "Deployment finished."
-                exit 0
-                ;;
-              failed)
-                echo "::error::Deployment failed on the server — see .deploy/deploy.log there."
-                echo "$body"
-                exit 1
-                ;;
-            esac
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 "$SITE_URL/" || true)
+            echo "attempt ${attempt}: HTTP ${code:-none}"
+            if [ "$code" = "200" ]; then
+              echo "Deployment finished — $SITE_URL is serving the new build."
+              exit 0
+            fi
           done
 
-          echo "::error::Timed out after 30 minutes waiting for the build."
+          echo "::error::$SITE_URL did not return HTTP 200 within 5 minutes. Check the app's stderr.log on the server."
           exit 1
