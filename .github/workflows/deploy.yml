@@ -5,16 +5,57 @@ name: Deploy to cPanel
 # The cPanel host cannot compile this app: the account runs with a 1 GB soft /
 # 2 GB hard virtual-memory cap, which crashes the WASM SWC fallback that Next
 # needs because the host's glibc is too old for the native SWC binary. So the
-# build runs here on GitHub's runners and only the compiled `.next` bundle is
-# uploaded over FTP; the server just restarts (tmp/restart.txt is touched).
+# build runs here on GitHub's runners and only the compiled output is uploaded
+# over FTP; the server just restarts (tmp/restart.txt is touched).
 #
-# Required repository secrets (Settings → Secrets and variables → Actions):
+# ---------------------------------------------------------------------------
+# The build MUST use webpack, never Turbopack - which is what a plain
+# `next build` selects by default on Next 16.
+#
+# A Turbopack production build emits the server-external packages (mysql2,
+# bcryptjs - see serverExternalPackages in next.config.mjs) as *absolute
+# symlinks* under .next/node_modules pointing into the build machine's own
+# node_modules, and references them by a content-hashed alias:
+#
+#   .next/node_modules/mysql2-3d80281e5ed34ca6 -> /<builder>/node_modules/mysql2
+#
+# Nothing about that survives the trip: the path does not exist on the cPanel
+# host, and FTP has no command to create a symlink, so lftp silently leaves it
+# behind. Every database-backed page and route then dies at module evaluation:
+#
+#   Cannot find module 'mysql2-3d80281e5ed34ca6/promise'
+#
+# Because that throws before any route's own try/catch can run, it surfaces as
+# a bare HTTP 500 with an empty body, while the public pages quietly fall back
+# to their built-in default copy. The symptom looks exactly like "the database
+# is not connected" even though the credentials are perfectly fine - which is
+# precisely how this bit the site once already.
+#
+# The webpack build instead requires "mysql2/promise" by its real name and
+# resolves it from the server's own node_modules, so the output is portable.
+# The "Verify the build is portable" step below enforces that, so a Turbopack
+# build can never reach the server again.
+# ---------------------------------------------------------------------------
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
 #   FTP_HOST  ftp.ilearningskills.com
-#   FTP_USER  the FTP account whose home directory is the app root
+#   FTP_USER  an FTP account that can write the application root
 #   FTP_PASS  that account's password
 #
+# Optional but recommended - DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD:
+# with these the ISR pages are prerendered from real content. Without them the
+# build still succeeds (the query layer falls back to defaults) and each page
+# fills in on the server the first time it is requested after its revalidate
+# window - 60s for the homepage, 300s elsewhere. Reaching the database from
+# here needs cPanel -> Remote MySQL to allow the connection.
+#
+# Optional repository variable FTP_APP_DIR - the application root relative to
+# where FTP_USER logs in. Normally unnecessary: the "Locate the application
+# root" step probes for server.js and handles both common layouts (an FTP
+# account rooted at the app, or the main cPanel account landing one level up).
+#
 # Dependency changes still need a one-off `npm install` on the server, because
-# only the build output is uploaded. See DEPLOYMENT.md → "Automatic redeploys".
+# only the build output is uploaded. See DEPLOYMENT.md -> "Automatic redeploys".
 
 on:
   push:
@@ -34,13 +75,14 @@ jobs:
       FTP_HOST: ${{ secrets.FTP_HOST }}
       FTP_USER: ${{ secrets.FTP_USER }}
       FTP_PASS: ${{ secrets.FTP_PASS }}
+      FTP_APP_DIR: ${{ vars.FTP_APP_DIR }}
       SITE_URL: https://www.ilearningskills.com
 
     steps:
       - name: Check secrets
         run: |
           if [ -z "$FTP_HOST" ] || [ -z "$FTP_USER" ] || [ -z "$FTP_PASS" ]; then
-            echo "::error::Set the FTP_HOST, FTP_USER and FTP_PASS repository secrets (Settings → Secrets and variables → Actions)."
+            echo "::error::Set the FTP_HOST, FTP_USER and FTP_PASS repository secrets (Settings -> Secrets and variables -> Actions)."
             exit 1
           fi
 
@@ -55,16 +97,97 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        env:
+          # NEXT_PUBLIC_* values are inlined into the bundle at build time, so
+          # they have to be set here. The server's .env.production is only read
+          # at runtime, which is why an earlier build shipped with
+          # og:url = http://localhost:3000 in its metadata.
+          NEXT_PUBLIC_SITE_URL: ${{ env.SITE_URL }}
+          # Optional; see the header. Empty values simply mean the prerendered
+          # pages start on default copy and refresh themselves on the server.
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MEDIA_DRIVER: local
+        run: npm run build -- --webpack
 
-      - name: Upload the build over FTP
+      - name: Verify the build is portable
+        run: |
+          fail=0
+
+          # Turbopack's externals shim. Its absolute symlinks cannot resolve on
+          # the host, and this is exactly what broke the database connection.
+          if [ -d .next/node_modules ]; then
+            echo "::error::.next/node_modules exists, so this is a Turbopack build. Its externals are absolute symlinks into this runner's node_modules and cannot resolve on the cPanel host. Build with --webpack."
+            ls -la .next/node_modules || true
+            fail=1
+          fi
+
+          # Any symlink at all would be dropped in transit, because FTP has no
+          # command to create one.
+          if [ -n "$(find .next -type l -print -quit)" ]; then
+            echo "::error::.next contains symlinks, which FTP cannot transfer:"
+            find .next -type l -printf '  %p -> %l\n'
+            fail=1
+          fi
+
+          # The real module name has to survive into the server bundle.
+          if ! grep -rqF 'require("mysql2/promise")' .next/server; then
+            echo "::error::No plain require(\"mysql2/promise\") in .next/server - the database driver is not externalised the way the host needs."
+            fail=1
+          fi
+
+          exit $fail
+
+      - name: Locate the application root
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq lftp
 
+          cat > probe.lftp <<EOF
+          set ftp:ssl-allow yes
+          set ssl:verify-certificate no
+          set ftp:ssl-protect-data yes
+          set net:max-retries 2
+          set net:timeout 20
+          open -u "$FTP_USER","$FTP_PASS" "$FTP_HOST"
+          cd "@CANDIDATE@"
+          cls -1 server.js
+          bye
+          EOF
+
+          # Either the FTP account logs in at the application root, or it lands
+          # in the cPanel home directory and the app sits one level down. Probe
+          # for the Passenger startup file instead of guessing, so a changed
+          # FTP account cannot silently publish the build into the wrong place.
+          found=""
+          for candidate in "$FTP_APP_DIR" "." "ilearningskills_app"; do
+            [ -n "$candidate" ] || continue
+            sed "s|@CANDIDATE@|$candidate|" probe.lftp > probe.run
+            if lftp -f probe.run >/dev/null 2>&1; then
+              found="$candidate"
+              break
+            fi
+            echo "no server.js in: $candidate"
+          done
+          rm -f probe.lftp probe.run
+
+          if [ -z "$found" ]; then
+            echo "::error::Could not find server.js where FTP_USER logs in, or in ./ilearningskills_app. Set the FTP_APP_DIR repository variable to the application root, relative to the FTP login directory."
+            exit 1
+          fi
+
+          echo "application root: $found"
+          echo "APP_DIR=$found" >> "$GITHUB_ENV"
+
+      - name: Upload the build over FTP
+        run: |
+          printf '%s\n' "$GITHUB_SHA" > restart.txt
+
           # The host's FTP certificate does not match the hostname, so verify is
           # off; traffic is still TLS-protected.
-          printf '%s\n' "$GITHUB_SHA" > restart.txt
           cat > deploy.lftp <<EOF
           set ftp:ssl-allow yes
           set ssl:verify-certificate no
@@ -72,12 +195,42 @@ jobs:
           set net:max-retries 3
           set net:timeout 30
           open -u "$FTP_USER","$FTP_PASS" "$FTP_HOST"
-          mirror --reverse --delete --verbose --exclude-glob cache --parallel=4 .next .next
+          cd "$APP_DIR"
+
+          # Clear any leftover Turbopack externals shim, which lftp would not
+          # overwrite on its own. Tolerate it being absent - the normal case
+          # from here on.
+          set cmd:fail-exit no
+          rm -rf .next/node_modules
+          set cmd:fail-exit yes
+
+          # --delete prunes the previous build's chunks, whose filenames are
+          # content-hashed and would otherwise pile up against the account
+          # quota. The running process keeps serving the build it has already
+          # loaded; the restart at the end picks the new one up. "cache" is the
+          # local webpack/ISR cache and is not wanted on the host.
+          mirror --reverse --delete --verbose --parallel=4 --exclude '^cache/' .next .next
+
+          # public/ is read from disk at runtime, so new static assets ship too.
+          # No --delete here, and uploads/ is excluded outright, so the media
+          # the admin has uploaded on the server is never touched.
+          mirror --reverse --verbose --parallel=4 --exclude '^uploads/' public public
+
+          # Read from disk on every boot: next.config.mjs by the Next server,
+          # server.js by Passenger, package.json for its "type": "module".
+          put next.config.mjs -o next.config.mjs
+          put server.js -o server.js
+          put package.json -o package.json
+          put package-lock.json -o package-lock.json
+
+          # Passenger restarts when this file's mtime changes; its contents
+          # record which commit is live.
           put restart.txt -o tmp/restart.txt
           bye
           EOF
 
           lftp -f deploy.lftp
+          rm -f deploy.lftp
 
       - name: Wait for the site to come back
         run: |
@@ -86,10 +239,30 @@ jobs:
             code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 "$SITE_URL/" || true)
             echo "attempt ${attempt}: HTTP ${code:-none}"
             if [ "$code" = "200" ]; then
-              echo "Deployment finished — $SITE_URL is serving the new build."
+              echo "$SITE_URL is serving the new build."
               exit 0
             fi
           done
 
-          echo "::error::$SITE_URL did not return HTTP 200 within 5 minutes. Check the app's stderr.log on the server."
+          echo "::error::$SITE_URL did not return HTTP 200 within 5 minutes. Check stderr.log in the application root on the server."
+          exit 1
+
+      - name: Verify the database is reachable from the new build
+        run: |
+          # Guards against shipping a build that boots but cannot load the MySQL
+          # driver - the failure this pipeline previously had, which left the
+          # site up and serving default copy, so the deploy still looked green.
+          for attempt in $(seq 1 8); do
+            body=$(curl -sS --max-time 30 "$SITE_URL/api/test-db" || true)
+            case "$body" in
+              *'"success":true'*)
+                echo "Database reachable from the deployed build."
+                exit 0
+                ;;
+            esac
+            echo "attempt ${attempt}: ${body:-<empty response>}"
+            sleep 10
+          done
+
+          echo "::error::The deployed build cannot reach MySQL. An empty 500 body means the driver failed to load; a JSON error code means the host or credentials in the server's .env.production need checking."
           exit 1
