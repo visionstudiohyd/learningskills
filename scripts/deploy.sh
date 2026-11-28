@@ -122,7 +122,9 @@ fi
 # --- install & build ----------------------------------------------------------
 
 set_status running "installing"
-if ! "$NPM_BIN" install --no-audit --no-fund; then
+# --include=dev: Passenger starts this script with NODE_ENV=production, and npm
+# then skips devDependencies — but the build needs them (tailwind, postcss).
+if ! "$NPM_BIN" install --include=dev --no-audit --no-fund; then
   fail install "npm install failed"
 fi
 
