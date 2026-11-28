@@ -32,15 +32,41 @@ jobs:
       - name: Trigger the rebuild
         run: |
           if [ -z "$DEPLOY_URL" ] || [ -z "$DEPLOY_SECRET" ]; then
-            echo "::error::Set the DEPLOY_URL and DEPLOY_SECRET repository secrets."
+            echo "::error::Set the DEPLOY_URL and DEPLOY_SECRET repository secrets (Settings → Secrets and variables → Actions)."
             exit 1
           fi
 
-          curl -sS --fail-with-body -X POST "${DEPLOY_URL%/}/api/deploy" \
+          code=$(curl -sS -o /tmp/trigger.json -w '%{http_code}' -X POST "${DEPLOY_URL%/}/api/deploy" \
             -H "Authorization: Bearer $DEPLOY_SECRET" \
             -H "Content-Type: application/json" \
-            -d "{\"commit\":\"${GITHUB_SHA}\"}"
-          echo
+            -d "{\"commit\":\"${GITHUB_SHA}\"}")
+          echo "POST /api/deploy -> HTTP $code"
+          head -c 400 /tmp/trigger.json; echo
+
+          case "$code" in
+            202)
+              echo "Rebuild queued on the server."
+              ;;
+            409)
+              echo "A rebuild is already running on the server — waiting for it instead."
+              ;;
+            401)
+              echo "::error::HTTP 401 — the server rejected DEPLOY_SECRET. It must match exactly (no quotes, no trailing spaces) in the cPanel Node.js app environment and in the GitHub secret."
+              exit 1
+              ;;
+            404)
+              echo "::error::HTTP 404 — /api/deploy does not exist in the running build yet. Run the one-time bootstrap in DEPLOYMENT.md → 'Automatic redeploys', then re-run this workflow."
+              exit 1
+              ;;
+            503)
+              echo "::error::HTTP 503 — DEPLOY_SECRET is not set in the cPanel Node.js app environment. Add it there and restart the app."
+              exit 1
+              ;;
+            *)
+              echo "::error::Unexpected response from the server (HTTP $code). See DEPLOYMENT.md → 'Automatic redeploys'."
+              exit 1
+              ;;
+          esac
 
       - name: Wait for the build to finish
         run: |

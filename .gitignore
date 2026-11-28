@@ -34,3 +34,6 @@ yarn-error.log*
 .vercel
 /coverage
 *.sql.bak
+
+# deploy state written on the server by scripts/deploy.sh
+.deploy/

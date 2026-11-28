@@ -230,6 +230,123 @@ Three things bite on a cPanel/CloudLinux box that do not exist locally:
 The first deploy on a 1 GB quota lands around 880 MB used, so clear `.next/cache` before each
 rebuild if you get close to the limit.
 
+### Automatic redeploys (GitHub Actions → cPanel)
+
+Once set up, `git push` to `main` is the whole workflow: GitHub Actions asks the
+live app to rebuild itself, the server downloads `main`, runs `npm install` and
+`next build --webpack`, and Passenger restarts on the new build. The old build
+keeps serving visitors for the entire run, so nobody sees a half-deployed site.
+
+```
+git push origin main
+      │
+      ▼
+GitHub Actions  (.github/workflows/deploy.yml)
+      │  POST /api/deploy          Authorization: Bearer $DEPLOY_SECRET
+      ▼
+Live Next.js app (cPanel / Passenger)  ──spawns──▶  scripts/deploy.sh
+      │                                                  │
+      │  GET /api/deploy  ◀── polls every 15s ────────────┤ .deploy/status.json
+      │                                                  │ .deploy/deploy.log
+      ▼                                                  ▼
+ Workflow goes green / red                    tarball → npm install → build → restart
+```
+
+Three moving parts have to know the same secret; if any of them is missing you get
+an immediate, specific error in the Actions log:
+
+| Where | Name | Value |
+|---|---|---|
+| cPanel → Setup Node.js App → your app → Environment variables | `DEPLOY_SECRET` | a long random string |
+| GitHub → Settings → Secrets and variables → Actions | `DEPLOY_SECRET` | **the same string** |
+| GitHub → Settings → Secrets and variables → Actions | `DEPLOY_URL` | `https://www.ilearningskills.com` |
+
+Generate the secret once:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+`DEPLOY_SECRET` belongs in `.env.production` on the server too, if the app reads
+its config from a file rather than from the cPanel environment. It is ignored by
+git — never commit it.
+
+#### One-time bootstrap (required the first time)
+
+The workflow calls `/api/deploy` on the live site, so that route has to already be
+running there. Until it is, the job fails with **HTTP 404 — /api/deploy does not
+exist in the running build yet**. Push alone cannot fix that (chicken and egg), so
+run the deploy script once by hand from cPanel → **Terminal**:
+
+```bash
+cd ~/ilearningskills_app        # your actual Application root
+mkdir -p scripts
+curl -fsSL https://raw.githubusercontent.com/visionstudiohyd/learningskills/main/scripts/deploy.sh \
+  -o scripts/deploy.sh
+bash scripts/deploy.sh
+```
+
+That downloads `main`, installs, builds, restarts the app, and writes progress to
+`.deploy/deploy.log`. Anything it does not download (`.env*`, `node_modules`,
+`.next`, `public/uploads`) is left untouched. Add `DEPLOY_SECRET` to the app's
+environment first so the route works the moment the new build is live, then
+restart:
+
+```bash
+mkdir -p tmp && touch tmp/restart.txt
+```
+
+**If Terminal is disabled on your plan:** upload `scripts/deploy.sh` into the app root
+with File Manager, then add a one-off cPanel → **Cron Jobs** entry running
+`bash ~/ilearningskills_app/scripts/deploy.sh` (once a day, or `* * * * *`), let it
+run, then delete the entry. Cron runs as your account user, so it installs and
+builds exactly as the CI trigger would.
+
+Confirm it is live (expect `200`, not `404`):
+
+```bash
+curl -sS -H "Authorization: Bearer THE_SECRET" https://www.ilearningskills.com/api/deploy
+# {"success":true,"state":"success","step":"done",...}
+```
+
+#### Verify the pipeline
+
+Actions tab → **Deploy to cPanel** → **Run workflow** (`workflow_dispatch`), or
+just push a commit to `main`. Expected timeline on shared hosting: the build takes
+roughly 10–25 minutes, so the job stays "in progress" and polls for up to 30
+minutes. A green run means the live site is serving the new commit.
+
+To confirm the deployed commit, check `.deploy/status.json` on the server — it
+records the `commit` SHA the workflow sent.
+
+#### If it fails
+
+| Actions error | Meaning | Fix |
+|---|---|---|
+| `Set the DEPLOY_URL and DEPLOY_SECRET repository secrets` | Secrets not created (or named differently) | Add both under Settings → Secrets and variables → Actions |
+| `HTTP 404` | Route not in the running build | Run the one-time bootstrap above |
+| `HTTP 401` | Secret mismatch | Copy the exact value from cPanel into the GitHub secret; no quotes, no trailing space |
+| `HTTP 503` | Route running but `DEPLOY_SECRET` missing in the app environment | Add it in Setup Node.js App, then restart |
+| `deployment failed on the server` | Build/install failed on the host | Read `.deploy/deploy.log` in the app root (usually the 1 GB quota or `GLIBC` issue from the table above) |
+| `Timed out … waiting for the build` | Build slower than 30 min, or the process died | Check `.deploy/status.json` and the log; raise `attempt` count in the workflow if it genuinely needs longer |
+| Two deploys at once | Overlapping pushes | The script holds `.deploy/lock` and exits rather than double-building; the workflow also serialises runs with `concurrency` |
+
+Manual rebuild at any time, without git:
+
+```bash
+cd ~/ilearningskills_app && bash scripts/deploy.sh
+```
+
+#### Security note
+
+`/api/deploy` is a privileged endpoint: whoever holds `DEPLOY_SECRET` can make the
+server rebuild. Keep the secret out of the repo, out of screenshots and out of
+chat, and rotate it (new value in both places) if it ever leaks. The cPanel
+account password is far more powerful than this token — anything that could read
+it could also take over hosting, so treat it as sensitive and change it if it was
+shared in plain text.
+
+
 Trade-off: you lose Vercel's CDN, image optimisation pipeline and automatic deploys, and shared
 hosting is typically slower under load. You gain a single bill, `localhost` database access and
 writable uploads.
