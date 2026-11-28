@@ -190,10 +190,10 @@ jobs:
           # certificate does not match the hostname, so verification is off;
           # the traffic is still TLS-protected.
           #
-          # parallel=2 is deliberate. The first attempts at this used 4 and the
-          # session died ~11 minutes in, twice; shared FTP hosts commonly cap
-          # concurrent connections per account, and the payload is only ~24 MB
-          # spread over many small files, so the extra streams buy little.
+          # parallel=2 is deliberate. An earlier version used 4 and the session
+          # died ~11 minutes in, twice; shared FTP hosts commonly cap concurrent
+          # connections per account, and the payload is only ~24 MB spread over
+          # many small files, so extra streams buy very little.
           cat > lftp.rc <<EOF
           set ftp:ssl-allow yes
           set ssl:verify-certificate no
@@ -206,57 +206,74 @@ jobs:
           cd "$APP_DIR"
           EOF
 
-          # The upload runs as three separate lftp sessions rather than one, so
-          # that a failure in the optional middle phase cannot skip the restart
-          # at the end. That is not hypothetical: a deploy once uploaded a
-          # perfect build, hit an error on the public/ mirror, and exited before
-          # writing tmp/restart.txt - so the host went on serving the old broken
-          # build while the fixed one sat on disk, unused and invisible.
-
-          # 1. The build. The only payload that matters, so this phase is the
-          #    one allowed to stop the deploy - but only after retrying, since
-          #    the failures seen here were dropped sessions rather than bad
-          #    files. --continue resumes a partial transfer instead of starting
-          #    the whole mirror again.
+          # ---------------------------------------------------------------
+          # The build is staged in a separate directory and swapped in with a
+          # rename, rather than mirrored over the live .next.
           #
-          #    --delete prunes the previous build's content-hashed chunks, which
-          #    would otherwise pile up against the account quota, and removes a
-          #    Turbopack externals shim left behind by an older deploy.
+          # Mirroring in place took the public site down for the whole upload.
+          # Next references its JavaScript by content hash, so a new build has
+          # new chunk filenames; --delete removed the old ones while the
+          # running process was still serving HTML that pointed at them. The
+          # pages kept returning 200 and then failed in the browser with
+          # "This page couldn't load", because every chunk behind them had
+          # become a 500. Staging keeps the live .next completely untouched
+          # until it is replaced in one step.
+          # ---------------------------------------------------------------
+
+          # 1. Stage the new build. Retried, because the failures seen here
+          #    were dropped sessions rather than bad files; --continue resumes
+          #    a partial transfer instead of starting over.
           #
           #    The excludes are all dead weight for this deployment style:
           #    cache/ is the local webpack/ISR cache, types/ is TypeScript
           #    definitions, trace and diagnostics are build telemetry, and the
-          #    .nft.json file-tracing manifests are only read when building a
-          #    standalone bundle, which this is not.
+          #    .nft.json manifests are only read when building a standalone
+          #    bundle, which this is not.
           cat lftp.rc > step.lftp
           cat >> step.lftp <<'EOF'
           set cmd:fail-exit no
-          rm -rf .next/node_modules
+          rm -rf .next.incoming
           set cmd:fail-exit yes
-          mirror --reverse --delete --verbose --parallel=2 --continue --exclude '^cache/' --exclude '^types/' --exclude '^trace$' --exclude '^trace-build$' --exclude '^diagnostics/' --exclude '\.nft\.json$' .next .next
+          mirror --reverse --delete --verbose --parallel=2 --continue --exclude '^cache/' --exclude '^types/' --exclude '^trace$' --exclude '^trace-build$' --exclude '^diagnostics/' --exclude '\.nft\.json$' .next .next.incoming
           bye
           EOF
 
-          uploaded=0
+          staged=0
           for attempt in 1 2 3; do
             if lftp -f step.lftp; then
-              uploaded=1
+              staged=1
               break
             fi
-            echo "::warning::.next mirror attempt ${attempt} did not complete; retrying (--continue resumes where it stopped)."
+            echo "::warning::Staging attempt ${attempt} did not complete; retrying (--continue resumes where it stopped). The live site is unaffected - nothing has been swapped in yet."
           done
 
-          if [ "$uploaded" != "1" ]; then
-            echo "::error::Could not upload .next after 3 attempts. The host dropped the FTP session each time. Nothing was restarted, so the previous build is still serving."
+          if [ "$staged" != "1" ]; then
+            echo "::error::Could not upload the build after 3 attempts. Nothing was swapped in, so the site is still serving the previous build normally."
             exit 1
           fi
 
-          # 2. Files the server reads from disk on every boot but which rarely
+          # 2. Swap it in. Two renames back to back, so the window in which
+          #    .next does not exist is milliseconds rather than minutes. The
+          #    running process keeps its open file handles on the old inodes,
+          #    so requests already in flight finish against the old build.
+          cat lftp.rc > step.lftp
+          cat >> step.lftp <<'EOF'
+          set cmd:fail-exit no
+          rm -rf .next.old
+          set cmd:fail-exit yes
+          mv .next .next.old
+          mv .next.incoming .next
+          bye
+          EOF
+          lftp -f step.lftp
+
+          # 3. Files the server reads from disk on every boot but which rarely
           #    change: public/ static assets, next.config.mjs (read by the Next
           #    server), server.js (the Passenger entry point) and package.json
-          #    (for its "type": "module"). Best-effort on purpose - see above.
-          #    The verification steps at the end still decide the run outcome,
-          #    so a genuinely broken deploy cannot pass because of this.
+          #    (for its "type": "module"). Best effort - a failure here must not
+          #    skip the restart below and strand a build that is already in
+          #    place. The verification steps at the end still decide the run
+          #    outcome, so a genuinely broken deploy cannot pass because of it.
           #
           #    No --delete on public, and uploads/ is excluded outright, so the
           #    media uploaded through the admin is never touched by a deploy.
@@ -270,14 +287,14 @@ jobs:
           bye
           EOF
           if ! lftp -f step.lftp; then
-            echo "::warning::Could not sync public/ and the root config files. The build itself uploaded fine, so the deploy continues to the restart. Re-check this if a new static asset or a next.config.mjs / server.js change has not taken effect."
+            echo "::warning::Could not sync public/ and the root config files. The build itself is in place, so the deploy continues to the restart. Re-check this if a new static asset or a next.config.mjs / server.js change has not taken effect."
           fi
 
-          # 3. Activate the new build. Passenger restarts when tmp/restart.txt
-          #    changes mtime, and the contents record which commit is live.
-          #    The mkdir is deliberate: tmp/ is easy to lose (a File Manager
-          #    cleanup removes it), and without it the put fails and the new
-          #    build never gets activated at all.
+          # 4. Activate. Passenger restarts when tmp/restart.txt changes mtime,
+          #    and the contents record which commit is live. The mkdir is
+          #    deliberate: tmp/ is easy to lose (a File Manager cleanup removes
+          #    it), and without it the put fails and the new build, already
+          #    swapped in, would never actually be loaded.
           cat lftp.rc > step.lftp
           cat >> step.lftp <<'EOF'
           set cmd:fail-exit no
@@ -287,6 +304,18 @@ jobs:
           bye
           EOF
           lftp -f step.lftp
+
+          # 5. Drop the previous build, whose content-hashed chunks would
+          #    otherwise pile up against the account quota. Left until after
+          #    the restart so there is always a complete build on disk, and
+          #    tolerant of failure because it is only housekeeping.
+          cat lftp.rc > step.lftp
+          cat >> step.lftp <<'EOF'
+          set cmd:fail-exit no
+          rm -rf .next.old
+          bye
+          EOF
+          lftp -f step.lftp || true
 
           rm -f lftp.rc step.lftp
 
