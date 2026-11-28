@@ -434,21 +434,7 @@ CREATE TABLE IF NOT EXISTS `menu_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------------
--- 21. NEWSLETTER SUBSCRIBERS
--- ---------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `newsletter_subscribers` (
-  `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `email`      VARCHAR(190) NOT NULL,
-  `name`       VARCHAR(140) DEFAULT NULL,
-  `is_active`  TINYINT(1)   NOT NULL DEFAULT 1,
-  `ip_address` VARCHAR(60)  DEFAULT NULL,
-  `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_subscriber_email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ---------------------------------------------------------------------------
--- 22. ACTIVITY LOG  (admin audit trail)
+-- 21. ACTIVITY LOG  (admin audit trail)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `activity_log` (
   `id`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -468,7 +454,7 @@ CREATE TABLE IF NOT EXISTS `activity_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------------
--- 23. PAGE VIEW ANALYTICS  (lightweight, for dashboard charts)
+-- 22. PAGE VIEW ANALYTICS  (lightweight, for dashboard charts)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `page_views` (
   `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,

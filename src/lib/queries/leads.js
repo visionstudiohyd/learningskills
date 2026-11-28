@@ -265,32 +265,3 @@ export async function deleteContactMessage(id) {
   return execute('DELETE FROM contact_messages WHERE id = ?', [Number(id)]);
 }
 
-/* ===========================================================================
-   NEWSLETTER
-   =========================================================================== */
-
-export async function subscribeNewsletter({ email, name = null, ip = null }) {
-  await execute(
-    `INSERT INTO newsletter_subscribers (email, name, ip_address)
-     VALUES (?, ?, ?)
-     ON DUPLICATE KEY UPDATE is_active = 1, name = COALESCE(VALUES(name), name)`,
-    [String(email).toLowerCase(), name, ip]
-  );
-  return true;
-}
-
-export async function getSubscribers({ page = 1, perPage = 50 } = {}) {
-  const currentPage = clampPage(page);
-  const limit = clampLimit(perPage, 50, 200);
-  const offset = (currentPage - 1) * limit;
-  const items = await queryRaw(
-    `SELECT id, email, name, is_active, created_at FROM newsletter_subscribers
-      ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
-  );
-  const totalRow = await queryOne('SELECT COUNT(*) AS total FROM newsletter_subscribers');
-  return paginate(items, totalRow?.total, currentPage, limit);
-}
-
-export async function deleteSubscriber(id) {
-  return execute('DELETE FROM newsletter_subscribers WHERE id = ?', [Number(id)]);
-}

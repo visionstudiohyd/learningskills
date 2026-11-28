@@ -17,7 +17,7 @@ export const SETTING_GROUPS = [
   { key: 'pages', label: 'Page Banners', icon: 'FileText', description: 'Headings and intro copy for the inner pages.' },
   { key: 'enquiry', label: 'Enquiry & Forms', icon: 'Inbox', description: 'Form behaviour, thank-you message and notifications.' },
   { key: 'seo', label: 'SEO & Sharing', icon: 'Search', description: 'Default meta tags, Open Graph image and verification.' },
-  { key: 'footer', label: 'Footer', icon: 'PanelBottom', description: 'Footer blurb, newsletter and copyright.' },
+  { key: 'footer', label: 'Footer', icon: 'PanelBottom', description: 'Footer blurb and copyright.' },
   { key: 'integrations', label: 'Integrations', icon: 'Plug', description: 'Analytics and third-party scripts.' },
 ];
 
@@ -126,9 +126,6 @@ export const DEFAULT_SETTINGS = [
 
   /* --------------------------------- FOOTER ------------------------------ */
   { key: 'footer_about_text', label: 'Footer blurb', type: 'textarea', group: 'footer', value: 'Learning Skills trains working professionals and recent graduates in the skills employers are actually hiring for — with batches that fit around real life.' },
-  { key: 'footer_newsletter_enabled', label: 'Show newsletter signup', type: 'boolean', group: 'footer', value: '0' },
-  { key: 'footer_newsletter_title', label: 'Newsletter heading', type: 'text', group: 'footer', value: 'New batches, in your inbox' },
-  { key: 'footer_newsletter_text', label: 'Newsletter subheading', type: 'textarea', group: 'footer', value: 'One short email a month: new courses, upcoming batch dates and scholarship windows.' },
   { key: 'footer_copyright', label: 'Copyright line', type: 'text', group: 'footer', value: 'Learning Skills. All rights reserved.' },
   { key: 'footer_badge_text', label: 'Trust badge text', type: 'text', group: 'footer', value: 'ISO 9001:2015 certified training provider' },
 

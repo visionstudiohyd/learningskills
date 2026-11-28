@@ -28,7 +28,6 @@ export async function getDashboardStats() {
         (SELECT COUNT(*) FROM courses WHERE is_active = 1)                           AS courses_active,
         (SELECT COUNT(*) FROM testimonials WHERE is_active = 1)                      AS testimonials_active,
         (SELECT COUNT(*) FROM pages WHERE is_active = 1)                             AS pages_active,
-        (SELECT COUNT(*) FROM newsletter_subscribers WHERE is_active = 1)            AS subscribers_total,
         (SELECT COALESCE(SUM(views), 0) FROM courses)                                AS course_views
     `);
 

@@ -328,13 +328,6 @@ export default async function AdminDashboard() {
           href="/admin/messages"
         />
         <StatTile
-          label="Newsletter subscribers"
-          value={stats.subscribers_total || 0}
-          icon="Newspaper"
-          tone="teal"
-          href="/admin/subscribers"
-        />
-        <StatTile
           label="Course page views"
           value={stats.course_views || 0}
           icon="Eye"

@@ -5,7 +5,6 @@ import { getMenu } from '@/lib/queries/content';
 import { getMenuCourses } from '@/lib/queries/courses';
 import { sanitisePhone, toBool } from '@/lib/utils';
 import SmartImage from '@/components/ui/SmartImage';
-import NewsletterForm from '@/components/forms/NewsletterForm';
 
 const SOCIAL_ICONS = {
   facebook: Facebook,
@@ -60,23 +59,6 @@ export default async function Footer() {
           </div>
         </div>
       </div>
-
-      {/* ----------------------------- newsletter ---------------------------- */}
-      {toBool(settings.footer_newsletter_enabled) && (
-        <div className="relative border-b border-white/10">
-          <div className="shell grid gap-6 py-10 md:grid-cols-[1.2fr_1fr] md:items-center md:gap-10 md:py-12">
-            <div>
-              <h2 className="font-display text-2xl font-bold text-white md:text-[1.75rem]">
-                {settings.footer_newsletter_title}
-              </h2>
-              <p className="mt-2 max-w-xl text-[0.9375rem] leading-relaxed text-white/65">
-                {settings.footer_newsletter_text}
-              </p>
-            </div>
-            <NewsletterForm />
-          </div>
-        </div>
-      )}
 
       {/* ------------------------------- columns ----------------------------- */}
       <div className="relative">

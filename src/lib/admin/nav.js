@@ -15,7 +15,6 @@ export const ADMIN_NAV = [
     items: [
       { label: 'Course Enquiries', href: '/admin/enquiries', icon: 'Inbox', permission: 'enquiries', badge: 'enquiries' },
       { label: 'Contact Messages', href: '/admin/messages', icon: 'Mail', permission: 'enquiries', badge: 'messages' },
-      { label: 'Subscribers', href: '/admin/subscribers', icon: 'Newspaper', permission: 'enquiries' },
     ],
   },
   {

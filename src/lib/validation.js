@@ -59,7 +59,7 @@ export const enquirySchema = z.object({
 });
 
 /* --------------------------------------------------------------------------
-   PUBLIC: contact form + newsletter
+   PUBLIC: contact form
    -------------------------------------------------------------------------- */
 export const contactSchema = z.object({
   name: nameSchema,
@@ -68,11 +68,6 @@ export const contactSchema = z.object({
   subject: optionalText(250),
   message: trimmed(z.string().min(10, 'Please write at least 10 characters').max(3000, 'Message is too long')),
   company: z.string().max(200).optional(), // honeypot — see enquirySchema
-});
-
-export const newsletterSchema = z.object({
-  email: emailSchema,
-  name: optionalText(140),
 });
 
 /* --------------------------------------------------------------------------
