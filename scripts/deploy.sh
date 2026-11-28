@@ -28,6 +28,19 @@ MIN_FREE_MB="${DEPLOY_MIN_FREE_MB:-120}"
 
 NPM_BIN="${NPM_BIN:-npm}"
 
+# cPanel runs this script with a 1 GB soft virtual-memory cap, and both npm and
+# `next build` abort with a V8 out-of-memory crash under it. Raise the soft cap
+# to whatever the account's hard cap allows (2 GB here).
+ulimit -v "$(ulimit -H -v)" 2>/dev/null || true
+
+# The account's npm wrapper refuses to run without HOME, and Passenger does not
+# always export it.
+: "${HOME:=$(dirname "$APP_DIR")}"
+export HOME
+
+# Keep V8 inside that virtual-memory budget instead of ballooning past it.
+export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=1024}"
+
 mkdir -p "$STATE_DIR"
 exec >>"$LOG_FILE" 2>&1
 
