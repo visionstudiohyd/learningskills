@@ -11,7 +11,14 @@ const nextConfig = {
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'https', hostname: '**.public.blob.vercel-storage.com' },
     ],
-    formats: ['image/webp'],
+    // AVIF first: typically 30-50% smaller than WebP on photographs, which is
+    // where this site's weight is (hero slides and course thumbnails). Next
+    // falls back to WebP, then the original, based on the Accept header.
+    formats: ['image/avif', 'image/webp'],
+    // Optimised images were being re-generated every 4 hours (the default),
+    // and each miss costs ~1.3s of CPU on this shared host. The URLs are
+    // content-addressed by src+width+quality, so a long TTL is safe.
+    minimumCacheTTL: 2678400,
     // Next 16 only serves qualities declared here. These are the values used
     // across the site (thumbnails through to full-bleed hero backgrounds).
     qualities: [60, 70, 75, 76, 78, 80, 82, 86, 90],
