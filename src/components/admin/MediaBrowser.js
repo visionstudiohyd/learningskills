@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import {
-  Check, Copy, Database, HardDrive, ImagePlus, Info, Link2, Loader2, Trash2, Upload,
+  Check, Copy, ImagePlus, Info, Link2, Loader2, Trash2, Upload,
 } from 'lucide-react';
 import { cx, formatDate } from '@/lib/utils';
 import SmartImage from '@/components/ui/SmartImage';
@@ -12,11 +12,9 @@ import { useToast } from '@/components/ui/Toast';
 /**
  * Full-page media library.
  *
- * Shows which storage driver is active, because that is the single setting that
- * changes between local development and a serverless deployment — and the one
- * most likely to cause confusion if it is not visible.
+ * Upload, browse, copy and delete the images used across the site.
  */
-export default function MediaBrowser({ initialItems = [], total = 0, folders = [], driver = 'local', maxSizeMb = 5 }) {
+export default function MediaBrowser({ initialItems = [], total = 0, folders = [], maxSizeMb = 5 }) {
   const router = useRouter();
   const toast = useToast();
   const inputRef = useRef(null);
@@ -118,29 +116,14 @@ export default function MediaBrowser({ initialItems = [], total = 0, folders = [
             Every image used across the site. Upload here, or pick from this library wherever an image field appears.
           </p>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-semibold text-ink-700">
-          {driver === 'db' ? <Database className="h-3.5 w-3.5 text-brand-600" strokeWidth={2.3} /> : <HardDrive className="h-3.5 w-3.5 text-brand-600" strokeWidth={2.3} />}
-          {driver === 'db' ? 'Database storage' : 'Disk storage'}
-        </span>
       </header>
 
-      {/* driver explainer */}
+      {/* upload guidance */}
       <div className="flex items-start gap-3 rounded-2xl border border-brand-200 bg-brand-50/60 p-4">
         <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-brand-600" strokeWidth={2.2} />
         <p className="text-sm leading-relaxed text-ink-700">
-          {driver === 'db' ? (
-            <>
-              Uploads are stored in the database and served from <code className="font-mono text-xs">/api/media/…</code>.
-              This is the right mode on Vercel, where the filesystem is read-only.
-            </>
-          ) : (
-            <>
-              Uploads are written to <code className="font-mono text-xs">/public/uploads</code>. Before deploying to
-              Vercel, set <code className="font-mono text-xs">MEDIA_DRIVER=db</code> — a serverless filesystem is
-              read-only, so disk uploads would fail there.
-            </>
-          )}{' '}
-          Maximum {maxSizeMb} MB per file.
+          JPG, PNG, WebP, GIF, AVIF and SVG are supported, up to {maxSizeMb} MB per file. Anything you
+          upload stays in this library, so the same image can be reused anywhere on the site.
         </p>
       </div>
 
@@ -267,7 +250,7 @@ export default function MediaBrowser({ initialItems = [], total = 0, folders = [
                   </p>
                   <p className="mt-0.5 truncate text-[0.6875rem] text-ink-400">
                     {item.width && item.height ? `${item.width}×${item.height} · ` : ''}
-                    {item.file_size ? `${Math.max(Math.round(item.file_size / 1024), 1)} KB` : item.storage_driver}
+                    {item.file_size ? `${Math.max(Math.round(item.file_size / 1024), 1)} KB` : '—'}
                   </p>
                   <p className="text-[0.6875rem] text-ink-400">{formatDate(item.created_at)}</p>
                 </div>

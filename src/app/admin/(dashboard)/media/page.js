@@ -1,4 +1,4 @@
-import { getDriver, listFolders, listMedia, maxUploadBytes } from '@/lib/storage';
+import { listFolders, listMedia, maxUploadBytes } from '@/lib/storage';
 import { plain } from '@/lib/utils';
 import MediaBrowser from '@/components/admin/MediaBrowser';
 
@@ -23,7 +23,6 @@ export default async function MediaPage({ searchParams }) {
       initialItems={plain(result.items)}
       total={result.total}
       folders={plain(folders)}
-      driver={getDriver()}
       maxSizeMb={Math.round(maxUploadBytes() / 1024 / 1024)}
     />
   );

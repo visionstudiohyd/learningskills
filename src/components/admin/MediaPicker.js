@@ -162,7 +162,7 @@ export default function MediaPicker({ open, onClose, onSelect, folder = 'general
           <div>
             <h2 className="font-display text-base font-bold text-ink-950">Media library</h2>
             <p className="mt-0.5 text-xs text-ink-500">
-              {driver === 'db' ? 'Stored in the database (serverless-safe)' : 'Stored in /public/uploads'}
+              Pick an image, or upload a new one
             </p>
           </div>
           <button
