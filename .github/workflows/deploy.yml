@@ -69,7 +69,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     env:
       FTP_HOST: ${{ secrets.FTP_HOST }}
@@ -189,12 +189,18 @@ jobs:
           # Settings shared by every lftp invocation below. The host's FTP
           # certificate does not match the hostname, so verification is off;
           # the traffic is still TLS-protected.
+          #
+          # parallel=2 is deliberate. The first attempts at this used 4 and the
+          # session died ~11 minutes in, twice; shared FTP hosts commonly cap
+          # concurrent connections per account, and the payload is only ~24 MB
+          # spread over many small files, so the extra streams buy little.
           cat > lftp.rc <<EOF
           set ftp:ssl-allow yes
           set ssl:verify-certificate no
           set ftp:ssl-protect-data yes
-          set net:max-retries 3
+          set net:max-retries 5
           set net:timeout 30
+          set net:reconnect-interval-base 5
           set cmd:fail-exit yes
           open -u "$FTP_USER","$FTP_PASS" "$FTP_HOST"
           cd "$APP_DIR"
@@ -207,22 +213,43 @@ jobs:
           # writing tmp/restart.txt - so the host went on serving the old broken
           # build while the fixed one sat on disk, unused and invisible.
 
-          # 1. The build. This is the only payload that matters, so any failure
-          #    here must stop the deploy.
+          # 1. The build. The only payload that matters, so this phase is the
+          #    one allowed to stop the deploy - but only after retrying, since
+          #    the failures seen here were dropped sessions rather than bad
+          #    files. --continue resumes a partial transfer instead of starting
+          #    the whole mirror again.
           #
           #    --delete prunes the previous build's content-hashed chunks, which
           #    would otherwise pile up against the account quota, and removes a
-          #    Turbopack externals shim left behind by an older deploy. "cache"
-          #    is the local webpack/ISR cache and is not wanted on the host.
+          #    Turbopack externals shim left behind by an older deploy.
+          #
+          #    The excludes are all dead weight for this deployment style:
+          #    cache/ is the local webpack/ISR cache, types/ is TypeScript
+          #    definitions, trace and diagnostics are build telemetry, and the
+          #    .nft.json file-tracing manifests are only read when building a
+          #    standalone bundle, which this is not.
           cat lftp.rc > step.lftp
           cat >> step.lftp <<'EOF'
           set cmd:fail-exit no
           rm -rf .next/node_modules
           set cmd:fail-exit yes
-          mirror --reverse --delete --verbose --parallel=4 --exclude '^cache/' .next .next
+          mirror --reverse --delete --verbose --parallel=2 --continue --exclude '^cache/' --exclude '^types/' --exclude '^trace$' --exclude '^trace-build$' --exclude '^diagnostics/' --exclude '\.nft\.json$' .next .next
           bye
           EOF
-          lftp -f step.lftp
+
+          uploaded=0
+          for attempt in 1 2 3; do
+            if lftp -f step.lftp; then
+              uploaded=1
+              break
+            fi
+            echo "::warning::.next mirror attempt ${attempt} did not complete; retrying (--continue resumes where it stopped)."
+          done
+
+          if [ "$uploaded" != "1" ]; then
+            echo "::error::Could not upload .next after 3 attempts. The host dropped the FTP session each time. Nothing was restarted, so the previous build is still serving."
+            exit 1
+          fi
 
           # 2. Files the server reads from disk on every boot but which rarely
           #    change: public/ static assets, next.config.mjs (read by the Next
@@ -235,7 +262,7 @@ jobs:
           #    media uploaded through the admin is never touched by a deploy.
           cat lftp.rc > step.lftp
           cat >> step.lftp <<'EOF'
-          mirror --reverse --verbose --parallel=4 --exclude '^uploads/' public public
+          mirror --reverse --verbose --parallel=2 --continue --exclude '^uploads/' public public
           put next.config.mjs -o next.config.mjs
           put server.js -o server.js
           put package.json -o package.json

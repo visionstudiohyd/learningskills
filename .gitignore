@@ -23,6 +23,7 @@ next-env.d.ts
 
 # local tooling / credentials
 cookies.txt
+.tmprunner/
 .freebuff
 
 # misc
